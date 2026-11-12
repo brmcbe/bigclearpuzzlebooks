@@ -56,7 +56,7 @@ def page(path, title, desc, body, canonical):
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{canonical}"><link rel="icon" href="{up}img/favicon.png"><link rel="apple-touch-icon" href="{up}img/apple-touch-icon.png">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}">
-<meta property="og:image" content="{BASE}/img/christmas-preview.jpg"><style>{CSS}</style></head><body>
+<meta property="og:image" content="{BASE}/img/christmas-preview.jpg"><meta name="p:domain_verify" content="5f2e6b6f365deaad7f1cde96575db747"/><style>{CSS}</style></head><body>
 <header><div class="w"><img src="{up}img/icon.png" alt=""><a href="{up}">Big Clear Puzzle Books</a>
 <nav><a href="{up}#free">Free printables</a><a href="{up}activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
 <main class="w">{body}</main>
