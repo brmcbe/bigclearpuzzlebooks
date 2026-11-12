@@ -1,0 +1,51 @@
+{
+ "garden": {
+  "name": "Garden & Nature",
+  "puzzle_title": "1. Spring Flowers",
+  "listing": 4614574595,
+  "pdf": "free-large-print-garden-word-search.pdf",
+  "preview": "garden-preview.png"
+ },
+ "bible": {
+  "name": "Bible",
+  "puzzle_title": "1. In the Beginning",
+  "listing": 4614576575,
+  "pdf": "free-large-print-bible-word-search.pdf",
+  "preview": "bible-preview.png"
+ },
+ "nostalgia": {
+  "name": "1950s & 60s Memories",
+  "puzzle_title": "1. At the Soda Fountain",
+  "listing": 4614577727,
+  "pdf": "free-large-print-nostalgia-word-search.pdf",
+  "preview": "nostalgia-preview.png"
+ },
+ "christmas": {
+  "name": "Christmas",
+  "puzzle_title": "1. Deck the Halls",
+  "listing": 4614612361,
+  "pdf": "free-large-print-christmas-word-search.pdf",
+  "preview": "christmas-preview.png"
+ },
+ "winter": {
+  "name": "Winter",
+  "puzzle_title": "1. Snowfall",
+  "listing": 4614625524,
+  "pdf": "free-large-print-winter-word-search.pdf",
+  "preview": "winter-preview.png"
+ },
+ "cooking": {
+  "name": "Cooking & Baking",
+  "puzzle_title": "1. In the Kitchen",
+  "listing": 4614625598,
+  "pdf": "free-large-print-cooking-word-search.pdf",
+  "preview": "cooking-preview.png"
+ },
+ "hymns": {
+  "name": "Hymns",
+  "puzzle_title": "1. Amazing Grace",
+  "listing": 4615214180,
+  "pdf": "free-large-print-hymns-word-search.pdf",
+  "preview": "hymns-preview.png"
+ }
+}
