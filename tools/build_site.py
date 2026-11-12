@@ -8,7 +8,7 @@ To add a free printable: put the PDF in downloads/, a preview JPG in img/, add a
 import json, os, datetime, html
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE = "https://brmcbe.github.io/bigclearpuzzlebooks"
+BASE = "https://bigclearpuzzlebooks.com"
 SHOP = "https://bigclearpuzzlebooks.etsy.com"           # Share & Save format
 PACK = 4615304644                                         # Activity Director Pack listing
 BUNDLES = {"christmas": 4615214324, "winter": 4615214324, "bible": 4615214518, "hymns": 4615214518}
@@ -61,7 +61,7 @@ def page(path, title, desc, body, canonical):
 <nav><a href="{up}#free">Free printables</a><a href="{up}activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
 <main class="w">{body}</main>
 <footer><div class="w">Big Clear Puzzle Books · Large-print word searches that are easy to see and always right.
-· <a href="{SHOP}">Etsy shop</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a><br>
+· <a href="{SHOP}">Etsy shop</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a> · <a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a><br>
 Free printables are for personal, family, classroom and activity-group use. Please share the link, not the file.</div></footer>
 </body></html>"""
 
