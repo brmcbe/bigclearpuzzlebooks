@@ -114,15 +114,19 @@ write("activity-directors/index.html", page("activity-directors/", "Large Print 
                                            "350 large-print word search puzzles for senior living, memory care and adult day programs, with a facility print license.", body, url))
 
 # home
+live = [k for k in ORDER if books[k].get("asin")]
+paperbacks = ("<h2>Paperbacks on Amazon</h2><p>Prefer a real book? These are printed paperbacks, 8.5 x 11 in, 50 puzzles each. A good gift.</p><p>"
+              + "".join(f'<a class="btn alt" href="https://www.amazon.com/dp/{books[k]["asin"]}">{books[k]["name"]} paperback</a>' for k in live)
+              + "</p>") if live else ""
 body = f"""<h1>Free large-print word search printables for seniors</h1>
 <p class="lead">Big, clear puzzles that are easy to see and always right. Print one free, then get the full books on Etsy.</p>
 <p><a class="btn" href="#free">Free printables</a><a class="btn alt" href="{SHOP}">Visit the shop</a></p>
 <h2 id="free">Free printable puzzles</h2><p>Each free PDF has one puzzle and its solution. New ones are added often.</p>
 <div class="grid">{''.join(card(o, '') for o in ORDER)}</div>
-<h2>For activity directors</h2><p>All 7 books, 350 puzzles, with a facility print license: <a href="activity-directors/">Activity Director Pack</a>.</p>
+{paperbacks}<h2>For activity directors</h2><p>All 7 books, 350 puzzles, with a facility print license: <a href="activity-directors/">Activity Director Pack</a>.</p>
 <h2>What makes them different</h2><ul><li>One puzzle per page with extra-large bold letters</li><li>Words read forward, down or diagonally, never backwards</li>
 <li>A computer checks every grid so each word appears exactly once, and every answer is in the back</li>
-<li>Also on Amazon as paperbacks</li></ul>"""
+</ul>"""
 write("index.html", page("", "Free Large Print Word Search Printables for Seniors | Big Clear Puzzle Books",
                          "Free printable large-print word search puzzles for seniors, memory care and activity directors: Christmas, Bible, hymns, 1950s and more.", body, BASE + "/"))
 
