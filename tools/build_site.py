@@ -116,7 +116,7 @@ write("activity-directors/index.html", page("activity-directors/", "Large Print 
 # home
 live = [k for k in ORDER if books[k].get("asin")]
 paperbacks = ("<h2>Paperbacks on Amazon</h2><p>Prefer a real book? These are printed paperbacks, 8.5 x 11 in, 50 puzzles each. A good gift.</p><p>"
-              + "".join(f'<a class="btn alt" href="https://www.amazon.com/dp/{books[k]["asin"]}">{books[k]["name"]} paperback</a>' for k in live)
+              + "".join(f'<a class="btn alt" href="https://www.amazon.com/dp/{books[k]["asin"]}">{html.escape(books[k]["name"])} paperback</a>' for k in live)
               + "</p>") if live else ""
 body = f"""<h1>Free large-print word search printables for seniors</h1>
 <p class="lead">Big, clear puzzles that are easy to see and always right. Print one free, then get the full books on Etsy.</p>
