@@ -20,14 +20,16 @@
   "puzzle_title": "1. At the Soda Fountain",
   "listing": 4614577727,
   "pdf": "free-large-print-nostalgia-word-search.pdf",
-  "preview": "nostalgia-preview.png"
+  "preview": "nostalgia-preview.png",
+  "asin": "B0HRYLWLT4"
  },
  "christmas": {
   "name": "Christmas",
   "puzzle_title": "1. Deck the Halls",
   "listing": 4614612361,
   "pdf": "free-large-print-christmas-word-search.pdf",
-  "preview": "christmas-preview.png"
+  "preview": "christmas-preview.png",
+  "asin": "B0HRYZTQZ1"
  },
  "winter": {
   "name": "Winter",
