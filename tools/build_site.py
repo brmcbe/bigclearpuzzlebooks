@@ -98,6 +98,34 @@ for k in ORDER:
 <h2>More free large-print word searches</h2><div class="grid">{''.join(card(o) for o in ORDER if o != k)}</div>"""
     write(f"free/{slug}/index.html", page(f"free/{slug}/", title, intro + " Free printable PDF with solution.", body, url))
 
+# extra free pages (tools/extras.json): more puzzles per book, seasonal, sudoku
+extras = json.load(open(os.path.join(ROOT, "tools", "extras.json")))
+def xcard(x, up="../../"):
+    return (f'<div class="card"><a href="{up}free/{x["slug"]}/"><img src="{up}img/{x["key"]}-preview.jpg" alt="{html.escape(x["title"])}" '
+            f'loading="lazy" width="765" height="990"></a><h3><a href="{up}free/{x["slug"]}/">{html.escape(x["puzzle_title"])}</a></h3>'
+            f'<p>{"Sudoku" if x.get("sudoku") else (books[x["book"]]["name"] if not x.get("seasonal") else "Thanksgiving")} · free PDF</p></div>')
+for x in extras:
+    url = f"{BASE}/free/{x['slug']}/"; urls.append(url); k = x["book"]
+    if x.get("sudoku"):
+        more = (f'<div class="box"><b>Want more?</b> The <b>Large Print Sudoku for Seniors</b> book has 100 easy puzzles like this one, one per page, '
+                f'with every solution. Coming to Amazon and Etsy in early December.<br><a class="btn alt" href="{SHOP}">Visit the shop</a></div>')
+        bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>Easy: solvable by simple logic, no guessing</li><li>Solution on page 2</li><li>Checked by computer: exactly one answer</li>"
+    else:
+        b = books[k]; lead = ("Get ready for Christmas next: the full <b>Christmas</b> book has 50 large-print puzzles, one per page, with every solution."
+                              if x.get("seasonal") else f"This puzzle comes from the full <b>{b['name']}</b> book: 50 large-print puzzles, one per page, with every solution.")
+        more = f'<div class="box"><b>Want more?</b> {lead}<br><a class="btn alt" href="{SHOP}/listing/{b["listing"]}">Get all 50 puzzles (printable PDF)</a>'
+        if b.get("asin"): more += f'<a class="btn alt" href="https://www.amazon.com/dp/{b["asin"]}">Paperback on Amazon</a>'
+        more += "</div>"
+        bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large letters: 21 pt bold grid, 17 pt word list</li><li>Words read forward, down or diagonally. Nothing backwards</li><li>Solution on page 2</li><li>Checked by computer: every word is there exactly once</li>"
+    sib = [y for y in extras if y is not x and ((x.get("seasonal") and y.get("seasonal")) or (not x.get("seasonal") and not y.get("seasonal") and k and y["book"] == k))]
+    grid = "".join(xcard(y) for y in sib[:3]) + "".join(card(o) for o in ORDER[:6 - min(len(sib), 3)] if o != k)
+    body = f"""<h1>{html.escape(x['h1'])}</h1><p class="lead">{html.escape(x['intro'])}</p>
+<div class="two"><div><img src="../../img/{x['key']}-preview.jpg" alt="{html.escape(x['title'])}" width="765" height="990"></div>
+<div><p><a class="btn" href="../../downloads/{x['pdf']}" download>Download the free PDF</a></p><ul>{bullets}</ul>{more}
+<p>Running activities for a whole community? The <a href="../../activity-directors/">Activity Director Pack</a> has all 7 books (350 puzzles) with a facility license.</p>
+</div></div><h2>More free large-print puzzles</h2><div class="grid">{grid}</div>"""
+    write(f"free/{x['slug']}/index.html", page(f"free/{x['slug']}/", x["title"], x["intro"] + " Free printable PDF with solution.", body, url))
+
 # activity directors
 url = f"{BASE}/activity-directors/"; urls.append(url)
 body = f"""<h1>Large-print word searches for activity directors</h1>
@@ -123,6 +151,9 @@ body = f"""<h1>Free large-print word search printables for seniors</h1>
 <p><a class="btn" href="#free">Free printables</a><a class="btn alt" href="{SHOP}">Visit the shop</a></p>
 <h2 id="free">Free printable puzzles</h2><p>Each free PDF has one puzzle and its solution. New ones are added often.</p>
 <div class="grid">{''.join(card(o, '') for o in ORDER)}</div>
+<h2>Thanksgiving week</h2><div class="grid">{''.join(xcard(x, '') for x in extras if x.get('seasonal'))}</div>
+<h2>New: large-print sudoku</h2><div class="grid">{''.join(xcard(x, '') for x in extras if x.get('sudoku'))}</div>
+<h2>More free word searches</h2><div class="grid">{''.join(xcard(x, '') for x in extras if not x.get('seasonal') and not x.get('sudoku'))}</div>
 {paperbacks}<h2>For activity directors</h2><p>All 7 books, 350 puzzles, with a facility print license: <a href="activity-directors/">Activity Director Pack</a>.</p>
 <h2>What makes them different</h2><ul><li>One puzzle per page with extra-large bold letters</li><li>Words read forward, down or diagonally, never backwards</li>
 <li>A computer checks every grid so each word appears exactly once, and every answer is in the back</li>
