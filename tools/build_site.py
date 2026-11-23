@@ -58,7 +58,7 @@ TODAY = datetime.date.today().isoformat()
 E = html.escape
 
 # ---------- names ----------
-EE_LISTING = None          # Etsy listing id for the Extra Easy book once Brad publishes it; until then buttons go to the shop
+EE_LISTING = 4623874467    # Etsy listing for Extra Easy vol. 1 (published by Brad 2026-11-23)
 TITLE_NAME = {"extra": "Extra Easy", "christmas": "Christmas", "winter": "Winter", "bible": "Bible", "hymns": "Hymn", "nostalgia": "1950s & 60s",
               "garden": "Garden", "cooking": "Cooking", "thanksgiving": "Thanksgiving", "fall": "Fall Harvest"}
 TEXT_NAME = {"extra": "extra easy", "christmas": "Christmas", "winter": "winter", "bible": "Bible", "hymns": "hymn", "nostalgia": "1950s and 60s",
