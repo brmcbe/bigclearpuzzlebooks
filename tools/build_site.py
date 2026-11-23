@@ -155,11 +155,11 @@ def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(76
 <meta name="twitter:card" content="summary_large_image"><meta name="p:domain_verify" content="5f2e6b6f365deaad7f1cde96575db747"/>
 {ld(SITE_LD)}{page_ld}{ML_SCRIPT}<style>{CSS}</style></head><body>
 <header><div class="w"><img src="/img/icon.png" alt=""><a href="/">Big Clear Puzzle Books</a>
-<nav><a href="/word-search/">Word Search</a><a href="/sudoku/">Sudoku</a><a href="/#signup">Free monthly pack</a><a href="/activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
+<nav><a href="/word-search/">Word Search</a><a href="/sudoku/">Sudoku</a><a href="/#signup">Free monthly pack</a><a href="/books/">Books</a><a href="/activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
 <main class="w">{crumbs_html(crumbs) if crumbs else ""}{body}</main>
 <footer><div class="w">Big Clear Puzzle Books · Large-print word searches and sudoku that are easy to see and always right.
 · <a href="{SHOP}">Etsy shop</a> · <a href="{AMAZON_AUTHOR}">Paperbacks by Callan Brooks on Amazon</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a> · <a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a><br>
-Guides: <a href="/dementia-friendly-printables/">Dementia-friendly printables</a> · <a href="/large-print-font-size/">What font size is large print?</a> · <a href="/activity-directors/">For activity directors</a><br>
+Guides: <a href="/books/">All our books</a> · <a href="/dementia-friendly-printables/">Dementia-friendly printables</a> · <a href="/large-print-font-size/">What font size is large print?</a> · <a href="/activity-directors/">For activity directors</a><br>
 Free printables are for personal, family, classroom and activity-group use. Please share the link, not the file.</div></footer>
 </body></html>"""
 
@@ -503,9 +503,42 @@ write(path + "index.html", page(path, "What Font Size Is Large Print? 16, 18 or 
               "publisher": {"@id": f"{BASE}/#org"}, "dateModified": TODAY}, faq_ld],
       crumbs=[("Home", "/"), ("What font size is large print?", None)]))
 
+BOOK_BLURB = {  # one line per book, from the Amazon descriptions
+    "garden": "Spring flowers, summer blooms, the vegetable patch, herbs, garden tools and backyard birds.",
+    "bible": "From Genesis to Revelation: Eden, Noah, Joseph, Moses and more. Names follow the King James Version.",
+    "nostalgia": "Soda fountains, sock hops, drive-ins, rock and roll and fifties fashion: a trip down memory lane.",
+    "christmas": "Deck the halls, trim the tree, the first Christmas, Santa's workshop, cookies and carols.",
+    "winter": "Snowfall, building a snowman, hot drinks, ice skating and the sledding hill.",
+    "hymns": "Amazing Grace, It Is Well with My Soul, Rock of Ages and more, all hymns published before 1929.",
+    "cooking": "In the kitchen, baking day, bread making and family favorites.",
+}
+
+# ---------- books (all paperbacks + printables) ----------
+path = "books/"; url = BASE + "/" + path; urls.append(url)
+def book_card(k):
+    b = books[k]
+    amz = f'<a class="btn" href="https://www.amazon.com/dp/{b["asin"]}">Paperback on Amazon</a>' if b.get("asin") else '<p class="small">Paperback coming soon</p>'
+    return (f'<div class="card"><img src="/img/cover-{k}.jpg" alt="Large Print Word Search for Seniors: {E(b["name"])} by Callan Brooks" loading="lazy" width="340" height="440">'
+            f'<h3>{E(b["name"])}</h3><p>{E(BOOK_BLURB[k])}</p><p>50 puzzles · 80 pages · 8.5 x 11 in</p>{amz}'
+            f'<p><a href="{SHOP}/listing/{b["listing"]}">Printable PDF on Etsy</a> · <a href="/free/{SEO[k][0]}/">Free sample puzzle</a></p></div>')
+body = f"""<h1>Large print word search books by Callan Brooks</h1>
+<p class="lead">The <b>Big Clear Puzzle Books</b> series: 50 puzzles per book, one big puzzle per 8.5 x 11 page, 21 pt bold grid letters and 18 pt word lists,
+words that never run backwards, and every answer in the back. Paperbacks on Amazon, printable PDFs on Etsy.</p>
+<p><a class="btn alt" href="{AMAZON_SERIES}">The whole series on Amazon</a><a class="btn alt" href="{AMAZON_AUTHOR}">Callan Brooks author page</a></p>
+<h2>Word search paperbacks</h2><div class="grid">{"".join(book_card(k) for k in ORDER)}</div>
+<h2>Large print sudoku</h2><p>7 books of 100 puzzles each, Easy to Hard, with extra-large numbers. Available now as printable PDFs; paperbacks are on the way.</p>
+<div class="grid">{"".join(sd_card(v, lv, lid) for v, lv, lid in SUDOKU)}</div>
+<div class="box"><b>For a whole facility?</b> The <a href="/activity-directors/">Activity Director Pack</a> has all 7 word search books (350 puzzles) with a facility print license.</div>
+{signup()}"""
+write(path + "index.html", page(path, "Large Print Word Search Books for Seniors by Callan Brooks",
+      "The Big Clear Puzzle Books series by Callan Brooks: large print word search paperbacks for seniors on Amazon, plus printable PDFs and large print sudoku.",
+      body, image="/img/cover-christmas.jpg", img_wh=(340, 440), img_alt="Large print word search books by Callan Brooks", og_type="website",
+      graph=[{"@type": "CollectionPage", "name": "Big Clear Puzzle Books by Callan Brooks", "url": url}] + [book_ld(k) for k in ORDER if books[k].get("asin")],
+      crumbs=[("Home", "/"), ("Books", None)]))
+
 # ---------- home ----------
 live = [k for k in ORDER if books[k].get("asin")]
-paperbacks = (f"<h2>Paperbacks on Amazon</h2><p>Prefer a real book? Printed paperbacks by Callan Brooks, 8.5 x 11 in. A good gift. <a href=\"{AMAZON_SERIES}\">See the whole series on Amazon</a>.</p><p>"
+paperbacks = (f"<h2>Paperbacks on Amazon</h2><p>Prefer a real book? Printed paperbacks by Callan Brooks, 8.5 x 11 in. A good gift. <a href=\"{AMAZON_SERIES}\">See the whole series on Amazon</a> or <a href=\"/books/\">browse all our books</a>.</p><p>"
               + "".join(f'<a class="btn alt" href="https://www.amazon.com/dp/{books[k]["asin"]}">{E(books[k]["name"])}</a>' for k in live)
               + "</p>") if live else ""
 body = f"""<h1>Free large-print puzzles for seniors</h1>
