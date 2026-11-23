@@ -26,6 +26,33 @@ SAMPLER = 4615223623
 books = json.load(open(os.path.join(ROOT, "tools", "books.json")))
 extras = json.load(open(os.path.join(ROOT, "tools", "extras.json")))
 WORDS = json.load(open(os.path.join(ROOT, "tools", "wordlists.json")))
+# Word lists for new word-search pages are filled in automatically from the factory themes when the ventures repo is
+# cloned next to this one (../ventures/research/tools/puzzle-books/themes). Without it, a page just skips its word list.
+THEMES_DIR = os.path.join(os.path.dirname(ROOT), "ventures", "research", "tools", "puzzle-books", "themes")
+THEME_FILE = {"garden": "garden", "bible": "bible", "nostalgia": "nostalgia-50s-60s", "christmas": "christmas", "winter": "winter",
+              "cooking": "cooking-baking", "hymns": "hymns"}
+
+
+def fill_words():
+    need = [(k, b["puzzle_title"][3:], k) for k, b in books.items() if k not in WORDS]
+    need += [(x["key"], x["puzzle_title"], x.get("theme") or ("thanksgiving-free" if x.get("seasonal") else x["book"]))
+             for x in extras if not x.get("sudoku") and x["key"] not in WORDS]
+    added = 0
+    for key, title, th in need:
+        f = os.path.join(THEMES_DIR, THEME_FILE.get(th, th) + ".json")
+        if not os.path.exists(f):
+            print("no word list (theme file not found):", key); continue
+        for t, w in json.load(open(f))["puzzles"]:
+            if t.lower() == title.lower():
+                WORDS[key] = w; added += 1; break
+        else:
+            print("no word list (puzzle not in theme):", key)
+    if added:
+        json.dump(WORDS, open(os.path.join(ROOT, "tools", "wordlists.json"), "w"), indent=1)
+        print("word lists added:", added)
+
+
+fill_words()
 ISBN = {"nostalgia": "9798143472990", "christmas": "9798143474529", "winter": "9798145110173", "hymns": "9798145111453"}
 TODAY = datetime.date.today().isoformat()
 E = html.escape
@@ -207,6 +234,7 @@ def faq_block(qa):
 
 
 def words_block(words):
+    if not words: return ""
     return (f'<h2>Words to find</h2><ul class="words">{"".join(f"<li>☐ {E(w)}</li>" for w in sorted(words))}</ul>'
             f'<p class="facts">{len(words)} words · 14 x 14 grid · words read right, down or diagonally down-right, never backwards</p>')
 
@@ -248,16 +276,17 @@ def xcard(x, up="/"):
 ws_extras = [x for x in extras if not x.get("seasonal") and not x.get("sudoku")]
 sd_extras = [x for x in extras if x.get("sudoku")]
 seasonal = [x for x in extras if x.get("seasonal")]
+WS_N = len(ORDER) + len(ws_extras)        # free word search pages (seasonal pages not counted)
 
 # ---------- base free pages (puzzle 1 of each book) ----------
 for k in ORDER:
     b = books[k]; slug, title, h1, intro, meta = SEO[k]; path = f"free/{slug}/"; url = BASE + "/" + path; urls.append(url)
-    pdf_pages.append((b["pdf"], path)); words = WORDS[k]; puzzle = b["puzzle_title"][3:]
+    pdf_pages.append((b["pdf"], path)); words = WORDS.get(k, []); puzzle = b["puzzle_title"][3:]
     bundle = BUNDLES.get(k)
     extra = f'<a class="btn alt" href="{SHOP}/listing/{bundle}">2-book bundle (100 puzzles)</a>' if bundle else ""
     if b.get("asin"):   # paperback link only once Live on Amazon: add "asin" to tools/books.json
         extra += f'<a class="btn alt" href="https://www.amazon.com/dp/{b["asin"]}">Paperback on Amazon</a>'
-    qa = faq_ws(len(words)); faq_html, faq_ld = faq_block(qa)
+    qa = faq_ws(len(words) or "the"); faq_html, faq_ld = faq_block(qa)
     mine = [x for x in ws_extras if x["book"] == k]
     body = f"""<h1>{E(h1)}</h1><p class="lead">{E(intro)}</p>
 <div class="two"><div><img src="/img/{k}-preview.jpg" alt="Large print {E(TEXT_NAME[k])} word search \"{E(puzzle)}\" with answer key" width="765" height="990"></div>
@@ -294,10 +323,10 @@ for x in extras:
         doc = doc_ld(h1[0].upper() + h1[1:], url, f"/img/{x['key']}-preview.jpg", x["pdf"], f"large print sudoku, {lv.lower()} sudoku printable, sudoku for seniors, answer key", series=False)
         more_title = "More free large-print sudoku"
     else:
-        th = theme_of(x); T, t = TITLE_NAME[th], TEXT_NAME[th]; words = WORDS[x["key"]]; p = x["puzzle_title"]
+        th = theme_of(x); T, t = TITLE_NAME[th], TEXT_NAME[th]; words = WORDS.get(x["key"], []); p = x["puzzle_title"]
         title = EXTRA_TITLE.get(x["key"], f"{p} Word Search, Large Print {T} (Free PDF)")
         h1 = f"{p}: free large-print {t} word search"
-        meta = f'Free "{p}" {t} word search in big 21 pt letters: {len(words)} words, one page, answer key included. For seniors, adults and memory care groups.'
+        meta = f'Free "{p}" {t} word search in big 21 pt letters: {len(words) or 10} words, one page, answer key included. For seniors, adults and memory care groups.'
         b = books[k]; lead = ("Get ready for Christmas next: the full <b>Christmas</b> book has 50 large-print puzzles, one per page, with every solution."
                               if x.get("seasonal") else f"This puzzle comes from the full <b>{E(b['name'])}</b> book: 50 large-print puzzles, one per page, with every solution.")
         more = f'<div class="box"><b>Want more?</b> {lead}<br><a class="btn alt" href="{SHOP}/listing/{b["listing"]}">Get all 50 puzzles (printable PDF)</a>'
@@ -305,7 +334,7 @@ for x in extras:
         more += "</div>"
         bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large letters: 21 pt bold grid, 18 pt word list</li><li>Words read forward, down or diagonally. Nothing backwards</li><li>Answer key on page 2</li><li>Checked by computer: every word is there exactly once</li>"
         detail = words_block(words) + f"<p>{E(USE_TIP[th])}</p>"
-        qa = faq_ws(len(words))
+        qa = faq_ws(len(words) or "the")
         sib = [y for y in extras if y is not x and not y.get("sudoku") and ((x.get("seasonal") and y.get("seasonal")) or (not x.get("seasonal") and not y.get("seasonal") and y["book"] == k))]
         base = [] if x.get("seasonal") else [k]
         others = [o for o in ORDER if o not in base][:max(0, 6 - len(sib) - len(base))]
@@ -374,11 +403,11 @@ hub_qa = [("Are these word searches really free?", "Yes. Each free page has a on
           ("Who are they for?", "Seniors, adults who like a relaxing puzzle, memory care and assisted living groups, church groups and classrooms.")]
 faq_html, faq_ld = faq_block(hub_qa)
 body = f"""<h1>Free large-print word search printables for seniors and adults</h1>
-<p class="lead">7 themed books, 50 puzzles each, one puzzle per page with extra-large letters. Print three free from every book: 21 free PDFs, each with the answer key.</p>
+<p class="lead">7 themed books, 50 puzzles each, one puzzle per page with extra-large letters. Print free puzzles from every book: {WS_N} free PDFs, each with the answer key.</p>
 <p class="jump">{" · ".join(f'<a href="#{k}">{E(books[k]["name"])}</a>' for k in ORDER)} · <a href="/#thanksgiving">Thanksgiving</a></p>
 {sections}{faq_html}{signup()}"""
 write(path + "index.html", page(path, "Free Large Print Word Search Printables for Seniors & Adults",
-      "Browse 21 free large-print word searches: Christmas, winter, Bible, hymns, 1950s, garden and cooking. One puzzle per page, answer key included. Printable PDF.",
+      f"Browse {WS_N} free large-print word searches: Christmas, winter, Bible, hymns, 1950s, garden and cooking. One puzzle per page, answer key included. Printable PDF.",
       body, image="/img/cover-christmas.jpg", img_wh=(340, 440), img_alt="Large print word search books", og_type="website",
       graph=[{"@type": "CollectionPage", "name": "Free large-print word search printables", "url": url},
              item_list("Free large-print word searches", ws_links)] + [book_ld(k) for k in ORDER if books[k].get("asin")] + [faq_ld],
@@ -456,7 +485,7 @@ body = f"""<h1>Dementia-friendly printable activities: large-print puzzles</h1>
 <li>Pairs work well: one person finds, the other circles.</li>
 <li>Finishing isn't the goal. Stop while it's still fun.</li></ul>
 {faq_html}
-<p>More: <a href="/word-search/">all 21 free word searches</a> · <a href="/sudoku/">free large-print sudoku</a> · <a href="/activity-directors/">the Activity Director Pack</a></p>
+<p>More: <a href="/word-search/">all {WS_N} free word searches</a> · <a href="/sudoku/">free large-print sudoku</a> · <a href="/activity-directors/">the Activity Director Pack</a></p>
 {signup()}"""
 write(path + "index.html", page(path, "Dementia-Friendly Printable Activities: Large Print Puzzles (Free)",
       "Free large-print word searches and sudoku that are easy to see: big letters, nothing backwards, answer keys included. Printables for memory care and home.",
@@ -545,14 +574,14 @@ body = f"""<h1>Free large-print puzzles for seniors</h1>
 <p class="lead">Big, clear word searches and sudoku that are easy to see and always right. Print free samples, then get the full books on Etsy or Amazon.</p>
 <div class="series">
 <a class="tile" href="/word-search/"><img src="/img/cover-christmas.jpg" alt="Large print word search books" width="340" height="440">
-<span><b>Word Search</b>7 themed books, 50 puzzles each<br>21 free printables<em>Browse word searches →</em></span></a>
+<span><b>Word Search</b>7 themed books, 50 puzzles each<br>{WS_N} free printables<em>Browse word searches →</em></span></a>
 <a class="tile" href="/sudoku/"><img src="/img/cover-sudoku-1.jpg" alt="Large print sudoku books" width="340" height="440">
-<span><b>Sudoku</b>7 books, Easy to Hard, 100 puzzles each<br>6 free printables<em>Browse sudoku →</em></span></a>
+<span><b>Sudoku</b>7 books, Easy to Hard, 100 puzzles each<br>{len(sd_extras)} free printables<em>Browse sudoku →</em></span></a>
 </div>
 {signup()}
 <h2 id="thanksgiving">This week: Thanksgiving</h2><div class="grid">{"".join(xcard(x) for x in seasonal)}</div>
 <h2>Free word searches</h2><div class="grid">{"".join(card(o) for o in ORDER[:6])}</div>
-<p><a class="btn alt" href="/word-search/">See all 21 free word searches</a></p>
+<p><a class="btn alt" href="/word-search/">See all {WS_N} free word searches</a></p>
 <h2>Free sudoku</h2><div class="grid">{"".join(xcard(x) for x in sd_extras[:3])}</div>
 <p><a class="btn alt" href="/sudoku/">See the sudoku series</a></p>
 {paperbacks}<h2>For activity directors and memory care</h2><p>Facility print license, word search and sudoku: <a href="/activity-directors/">see the activity director page</a>, or read our guide to <a href="/dementia-friendly-printables/">dementia-friendly printables</a>.</p>
@@ -588,3 +617,8 @@ write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="htt
 write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
 write(".nojekyll", "")
 print("pages:", len(urls))
+try:   # PDF title/author/links (idempotent): keeps new free PDFs search-friendly without a separate step
+    subprocess.run(["python3", os.path.join(ROOT, "tools", "pdf_meta.py")], check=True, capture_output=True)
+    print("pdf metadata: ok")
+except Exception as e:
+    print("pdf metadata skipped:", e)
