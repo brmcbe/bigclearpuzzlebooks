@@ -136,25 +136,160 @@ HAVE_PIL = importlib.util.find_spec("PIL") is not None
 SHARE = []      # share images to render: {out, src, pdf, title, sudoku}
 IMGS = {}       # page URL -> [(img src, alt)] for the image sitemap
 ML_SCRIPT = """<script>(function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[]).push(arguments);},l=d.createElement(e),l.async=1,l.src=u,n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})(window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');ml('account','2817294');</script>"""
-CSS = """*{box-sizing:border-box}body{margin:0;font-family:Verdana,Geneva,'DejaVu Sans',sans-serif;font-size:20px;line-height:1.6;color:#1b1b1b;background:#faf7f0}
-a{color:#1f3a5f}header{background:#1f3a5f;color:#fff}header .w{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 20px}
-header img{width:56px;height:56px;border-radius:50%;background:#fff}header a{color:#fff;text-decoration:none;font-weight:bold;font-size:24px}
-nav{display:flex;flex-wrap:wrap;gap:4px 18px}nav a{color:#fff;font-size:18px}.w{max-width:1040px;margin:0 auto;padding:0 20px}
-h1{font-size:40px;line-height:1.2;margin:20px 0 12px;color:#1f3a5f}h2{font-size:30px;color:#1f3a5f;margin-top:44px}
-.lead{font-size:23px}.btn{display:inline-block;background:#ffde73;color:#1f3a5f;font-weight:bold;padding:14px 26px;border-radius:40px;text-decoration:none;margin:8px 8px 8px 0;font-size:21px}
-.btn.alt{background:#1f3a5f;color:#fff}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
-.card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.card img{width:100%;height:auto;border:1px solid #ddd;border-radius:4px}
-.card h3{margin:10px 0 4px;font-size:22px}.two{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
-.two img{width:100%;height:auto;border:1px solid #ccc;border-radius:6px;background:#fff}.box{background:#fff;border-left:8px solid #ffde73;padding:16px 22px;border-radius:6px;margin:24px 0}
-ul{padding-left:26px}footer{margin-top:60px;background:#1f3a5f;color:#fff;padding:26px 0;font-size:17px}footer a{color:#fff}
-.series{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:26px 0}.tile{display:flex;gap:18px;align-items:center;background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.1);text-decoration:none;color:#1b1b1b;font-size:19px}
-.tile img{width:150px;height:auto;border-radius:4px}.tile b{display:block;font-size:30px;color:#1f3a5f;margin-bottom:4px}.tile em{display:block;margin-top:10px;font-style:normal;font-weight:bold;color:#1f3a5f}
-.signup{background:#1f3a5f;color:#fff;border-radius:12px;padding:22px 26px;margin:30px 0}.signup h2{color:#fff;margin-top:0}.sf{display:flex;flex-wrap:wrap;gap:10px}
-.sf input{font-size:20px;padding:12px 14px;border-radius:8px;border:0;flex:1 1 220px}.small{font-size:16px;opacity:.85}.jump{font-size:18px}
-.crumbs{font-size:16px;margin:18px 0 0}.crumbs a{color:#1f3a5f}.words{columns:3 170px;list-style:none;padding:0;font-size:22px;font-weight:bold;letter-spacing:.5px}
-.facts{font-size:18px;color:#444}.faq h3{font-size:22px;margin:22px 0 4px;color:#1f3a5f}.faq p{margin:0 0 8px}
-table{border-collapse:collapse;width:100%;background:#fff;margin:18px 0}td,th{border:1px solid #ccc;padding:10px 12px;text-align:left;vertical-align:top}th{background:#eef2f7}
-@media(max-width:760px){.two,.series{grid-template-columns:1fr}h1{font-size:32px}nav a{font-size:16px}.tile img{width:110px}}"""
+CSS = """@font-face{font-family:"Bitter";src:url(/fonts/bitter-700.woff2) format("woff2");font-weight:700;font-display:swap}
+:root{--paper:#fbf6ec;--card:#fffdf8;--ink:#1f1d1a;--soft:#4f483d;--navy:#1e3a5f;--navy2:#172d4a;--gold:#ffde73;--goldd:#e3b33f;--rule:#e6dbc4;--etsy:#a4401f;--amz:#1b2633;--green:#2f6b47;--focus:#0b5fff}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:Verdana,Geneva,"DejaVu Sans",sans-serif;font-size:1.25rem;line-height:1.65;color:var(--ink);background:var(--paper)}
+h1,h2,h3,.brand b,.tile b,.ft-brand b{font-family:Bitter,Georgia,"Times New Roman",serif;font-weight:700;color:var(--navy);letter-spacing:-.005em}
+h1{font-size:2.75rem;line-height:1.15;margin:18px 0 12px}h2{font-size:2rem;line-height:1.2;margin:52px 0 14px}h3{line-height:1.25}
+a{color:var(--navy);text-decoration-thickness:2px;text-underline-offset:3px}a:hover{color:var(--etsy)}
+:focus-visible{outline:4px solid var(--focus);outline-offset:3px;border-radius:6px}
+img{max-width:100%;height:auto}.w{max-width:1140px;margin:0 auto;padding:0 24px}
+.lead{font-size:1.4375rem;color:var(--soft);max-width:44em}.small{font-size:1.0625rem}
+.skip{position:absolute;left:-9999px;top:8px;z-index:20;background:var(--gold);color:var(--navy);padding:12px 18px;font-weight:bold;border-radius:8px}.skip:focus{left:12px}
+/* top bar + header */
+.topbar{background:var(--navy);color:#fff}.topbar .w{display:flex;justify-content:flex-end}
+.util{display:flex;flex-wrap:wrap;gap:0 4px}.util a{display:inline-flex;align-items:center;min-height:44px;padding:4px 12px;color:#fff;font-size:1.0625rem;text-decoration:none}
+.util a:hover{color:var(--gold);text-decoration:underline}.util .nav-pack{color:var(--gold);font-weight:bold}
+.site-h{background:var(--card);border-bottom:1px solid var(--rule);box-shadow:0 4px 14px rgba(60,40,10,.05)}
+.site-h .w{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px 28px;padding-top:16px;padding-bottom:16px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--navy)}
+.brand img{width:66px;height:66px;border-radius:50%;box-shadow:0 0 0 3px var(--gold)}
+.brand b{display:block;font-size:1.75rem;line-height:1.1}.brand small{display:block;font-size:1rem;color:var(--soft);margin-top:3px}
+.main{display:flex;gap:8px}.main a{display:inline-flex;align-items:center;min-height:52px;padding:6px 20px;border-radius:12px;font-size:1.25rem;font-weight:bold;color:var(--navy);text-decoration:none;border:2px solid transparent}
+.main a:hover{border-color:var(--rule);background:#f6eedc;color:var(--navy)}.main a[aria-current]{background:var(--navy);color:#fff}
+.crumbs{font-size:1.0625rem;margin:22px 0 0;color:var(--soft)}.crumbs a{color:var(--navy)}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:12px 26px;margin:8px 10px 8px 0;border-radius:12px;border:2px solid transparent;
+ font-weight:bold;font-size:1.25rem;line-height:1.25;text-decoration:none;box-shadow:0 3px 0 rgba(0,0,0,.18);text-align:left}
+.btn:active{transform:translateY(2px);box-shadow:none}.btn:hover{filter:brightness(1.07)}
+.btn.dl{background:var(--gold);color:var(--navy);border-color:var(--goldd);font-size:1.5rem;min-height:70px;padding:14px 32px}
+.btn.dl::before{content:"";flex:none;width:28px;height:28px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e3a5f' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3v12M6 10l6 6 6-6M4 20h16'/%3E%3C/svg%3E") no-repeat center/contain}
+.btn.etsy{background:var(--etsy);color:#fff}.btn.amz{background:var(--amz);color:#fff}
+.btn.etsy::before,.btn.amz::before{flex:none;font-size:0.875rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;font-weight:bold}
+.btn.etsy::before{content:"Etsy";background:#fff;color:var(--etsy)}.btn.amz::before{content:"Amazon";background:#ffcf73;color:var(--amz)}
+.btn.go{background:var(--navy);color:#fff}.btn.go2{background:var(--card);color:var(--navy);border-color:var(--navy);box-shadow:none}
+.btn.etsy:hover,.btn.amz:hover,.btn.go:hover{color:#fff}.btn.dl:hover,.btn.go2:hover{color:var(--navy)}
+/* hero (home) */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center;padding:30px 0 10px}
+.hero h1{font-size:3.5rem;line-height:1.06;margin:0 0 18px}.hero .lead{font-size:1.4375rem}
+.hero-cta .btn{font-size:1.3125rem}.hero-art{position:relative;height:430px}
+.hero-art img{position:absolute;border-radius:6px;box-shadow:0 18px 40px rgba(40,30,10,.22)}
+.hero-art .c1{width:42%;left:0;top:70px;transform:rotate(-8deg)}.hero-art .c2{width:42%;right:0;top:56px;transform:rotate(7deg)}
+.hero-art .c3{width:56%;left:22%;top:12px;border:1px solid var(--rule);background:#fff}
+.why{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:6px 30px 18px;margin:26px 0}
+.why h2{margin:20px 0 10px;font-size:1.625rem}.why ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:18px 28px}
+.why li,.ticks li{position:relative;padding-left:42px}
+.why li::before,.ticks li::before{content:"";position:absolute;left:0;top:3px;width:28px;height:28px;border-radius:50%;background:var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E") no-repeat center/18px}
+/* tiles */
+.series{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:26px 0}
+.tile{display:flex;gap:22px;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:22px;text-decoration:none;color:var(--ink);font-size:1.1875rem;box-shadow:0 3px 0 var(--rule)}
+.tile:hover{border-color:var(--navy);color:var(--ink)}.tile img{width:140px;border-radius:4px;box-shadow:0 8px 18px rgba(0,0,0,.18)}
+.tile b{display:block;font-size:2rem;margin-bottom:4px}.tile em{display:inline-block;margin-top:12px;font-style:normal;font-weight:bold;color:var(--navy);border-bottom:3px solid var(--gold)}
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px;margin:20px 0}
+.card{position:relative;background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:14px 14px 16px;box-shadow:0 3px 0 var(--rule);transition:transform .15s}
+.card:hover{transform:translateY(-3px);border-color:#cdbb95}.card:focus-within{outline:4px solid var(--focus);outline-offset:3px}
+.card img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;object-position:top;border-radius:10px;border:1px solid #ece3cf;background:#fff}
+.card.bk img{aspect-ratio:340/440;object-fit:contain;border:0;box-shadow:0 6px 14px rgba(0,0,0,.16)}
+.card h3{font-size:1.375rem;margin:12px 0 4px}.card h3 a{text-decoration:none}.card h3 a:hover{text-decoration:underline}
+.card.pz h3 a::after{content:"";position:absolute;inset:0;border-radius:16px}
+.card p{margin:4px 0 0;font-size:1.0625rem;color:var(--soft)}.card .btn{display:flex;flex-direction:column;gap:4px;width:100%;font-size:1.125rem;min-height:52px;padding:10px 12px;margin:12px 0 8px;text-align:center}
+/* free page */
+.getit{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:40px;align-items:start;margin:22px 0 8px}
+.getit .pv img{display:block;width:100%;border:1px solid var(--rule);border-radius:10px;background:#fff;box-shadow:0 14px 34px rgba(60,40,10,.13)}
+.getit .act{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:26px 28px 14px;position:sticky;top:16px}
+.box h2{margin-top:6px}
+.dlrow{margin:0 0 12px}.dlrow .btn{width:100%;margin:0}
+.ticks{list-style:none;padding:0;margin:8px 0 0}.ticks li{padding-top:10px;padding-bottom:10px;border-top:1px dashed var(--rule)}.ticks li::before{top:12px}
+.wl{margin-top:10px}.facts{font-size:1.125rem;color:var(--soft)}
+.words{list-style:none;padding:0;margin:12px 0;display:flex;flex-wrap:wrap;gap:10px 12px;font-size:1.375rem;font-weight:bold;letter-spacing:.04em}
+.words li{background:#fff;border:2px solid var(--rule);border-radius:10px;padding:8px 16px;white-space:nowrap}
+.box{background:var(--card);border:1px solid var(--rule);border-left:8px solid var(--gold);border-radius:14px;padding:20px 26px;margin:28px 0}
+.box.buy{border:2px solid var(--navy);border-top:10px solid var(--navy);padding:24px 28px;background:var(--card)}
+.box.buy>b:first-child{display:block;font-family:Bitter,Georgia,serif;font-size:1.875rem;color:var(--navy);margin-bottom:6px}
+.box.buy br{display:none}.box.buy .btn{display:flex;width:fit-content;max-width:100%;margin-top:14px}
+.adline{font-size:1.1875rem}
+/* faq, tables, signup */
+.faq{margin-top:20px}.faq h3{font-size:1.375rem;margin:14px 0 0;padding:18px 24px 4px;background:var(--card);border:1px solid var(--rule);border-bottom:0;border-radius:14px 14px 0 0}
+.faq p{margin:0;padding:0 24px 18px;background:var(--card);border:1px solid var(--rule);border-top:0;border-radius:0 0 14px 14px}
+table{border-collapse:collapse;width:100%;background:var(--card);margin:18px 0}td,th{border:1px solid var(--rule);padding:12px 14px;text-align:left;vertical-align:top}th{background:#f3ead6}
+.signup{background:var(--navy);color:#fff;border-radius:20px;padding:32px 34px;margin:52px 0}
+.signup h2{color:#fff;margin:0 0 8px}.signup .small{color:#dbe3ee}.sf input{font-size:1.25rem}
+.jump{font-size:0;display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.jump a{font-size:1.125rem;display:inline-flex;align-items:center;min-height:48px;padding:6px 16px;background:var(--card);border:2px solid var(--rule);border-radius:999px;text-decoration:none;font-weight:bold}
+.jump a:hover{border-color:var(--navy)}ul{padding-left:26px}
+/* footer */
+footer.site{margin-top:80px;background:var(--navy2);color:#fff;padding:44px 0 30px;font-size:1.125rem}
+.ft{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:30px}.ft p{margin:0 0 10px}
+.ft-brand{display:flex;align-items:center;gap:12px}.ft-brand img{border-radius:50%;background:#fff}.ft-brand b{color:#fff;font-size:1.5rem}
+.ft-h{font-weight:bold;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;font-size:1rem}
+.ft ul{list-style:none;padding:0;margin:0}.ft li a{display:inline-block;padding:10px 0;color:#fff}.ft li a:hover{color:var(--gold)}
+.ft-note{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.22);padding-top:18px;font-size:1.0625rem;color:#d6dee9}
+@media(max-width:860px){
+ .topbar .w{padding:0 8px}.util{width:100%;display:grid;grid-template-columns:1fr 1.1fr .6fr}.util a{justify-content:center;text-align:center;font-size:0.9375rem;line-height:1.2;padding:4px 6px}
+ .site-h .w{padding-top:12px;padding-bottom:12px}.brand img{width:52px;height:52px}.brand b{font-size:1.4375rem}.brand small{font-size:0.9375rem}
+ .main{width:100%;display:grid;grid-template-columns:1.45fr 1fr 1fr;gap:8px}.main a{justify-content:center;white-space:nowrap;font-size:1.125rem;padding:6px 4px;border-color:var(--rule);background:#fff}
+ h1{font-size:2.125rem}h2{font-size:1.6875rem;margin-top:42px}.lead{font-size:1.3125rem}
+ .hero{grid-template-columns:1fr;padding-top:18px}.hero h1{font-size:2.5rem}.hero-art{height:240px;width:86%;max-width:360px;margin:0 auto}.getit .act{position:static}
+ .why ul,.series{grid-template-columns:minmax(0,1fr)}.tile{padding:16px;gap:16px}.tile img{width:104px}.tile b{font-size:1.6875rem}
+ .getit{grid-template-columns:1fr;gap:20px}.getit .act{order:-1;padding:20px 18px 8px}.getit .pv{max-width:460px}
+ .ft{grid-template-columns:1fr}}
+@media(max-width:380px){.main a{font-size:1rem}.brand b{font-size:1.25rem}}
+@media(max-width:600px){td,th{overflow-wrap:anywhere;padding:8px;font-size:1.0625rem}
+ .btn{width:100%;margin-right:0}.box{padding:18px}.box.buy{padding:20px 18px}.box.buy .btn{width:100%} .box.buy .btn{flex-direction:column;gap:6px;text-align:center}.signup{padding:24px 18px}.words{font-size:1.25rem;letter-spacing:.02em}.words li{padding:6px 12px}}
+@media print{html{font-size:100%!important}body{background:#fff;color:#000;font-size:13pt}
+ .topbar,.site-h,footer.site,.signup,.grid,.btn,.crumbs,.skip,.adline,.hero-art,.series,.jump,.buy{display:none!important}
+ .free main>*:not(.getit){display:none!important}.free .getit{display:block;margin:0}.free .act{display:none}
+ .free .pv img{width:100%;max-height:10in;object-fit:contain;border:0;box-shadow:none}
+ h1,h2,h3{color:#000}a{color:#000;text-decoration:none}.card,.box,.faq h3,.faq p{box-shadow:none;border-color:#999}}
+
+/* three home tiles */
+.series{grid-template-columns:repeat(3,minmax(0,1fr))}.tile{flex-direction:column;align-items:flex-start;gap:14px}.tile img{width:118px}.tile b{font-size:1.875rem}
+/* text-size control (A / A+ / A++), remembered on the device */
+.topbar .w{justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0 12px}
+.tsize{display:flex;align-items:center;gap:6px;color:#fff;font-size:1rem;padding:4px 0}
+.tsize button{font:inherit;font-weight:bold;min-width:46px;min-height:40px;padding:0 8px;border:2px solid #fff;background:transparent;color:#fff;border-radius:8px;cursor:pointer}
+.tsize button:nth-of-type(2){font-size:1.125rem}.tsize button:nth-of-type(3){font-size:1.25rem}
+.tsize button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+html[data-ts="2"]{font-size:112.5%}html[data-ts="3"]{font-size:125%}
+html[data-ts="2"] .main a,html[data-ts="3"] .main a{white-space:normal;text-align:center;line-height:1.15}
+@media(max-width:860px){.series{grid-template-columns:minmax(0,1fr)}.tile{flex-direction:row;align-items:center}.tile img{width:96px}
+ .tsize{width:100%;justify-content:center;border-top:1px solid rgba(255,255,255,.2)}}
+/* phones: single-column list cards */
+@media(max-width:600px){.grid{grid-template-columns:minmax(0,1fr);gap:12px}
+ .card{display:grid;grid-template-columns:92px minmax(0,1fr);column-gap:14px;align-items:start;padding:10px}
+ .card>*{grid-column:2}.card>a:first-child,.card>img:first-child{grid-column:1;grid-row:1/span 8}
+ .card img{width:92px;aspect-ratio:765/990;object-fit:cover;object-position:top}.card.bk img{aspect-ratio:340/440;object-fit:contain}
+ .card h3{font-size:1.3125rem;margin:4px 0 4px}.card p{font-size:1.0625rem}.card .btn{font-size:1.0625rem;margin:8px 0}}
+@media print{.tsize{display:none!important}}
+@media(max-width:860px){.ft,.getit{grid-template-columns:minmax(0,1fr)}.btn.dl{padding:12px 18px}}.ft a{overflow-wrap:anywhere}
+.tsize{font-size:16px}.tsize button{font-size:16px;min-height:44px}.tsize button:nth-of-type(2){font-size:18px}.tsize button:nth-of-type(3){font-size:20px}
+
+/* MailerLite embed */
+.signup .ml-embedded{margin:16px 0 6px}
+.signup #mlb2-48911036.ml-form-embedContainer,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form{width:100%!important;max-width:560px!important;margin:0!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-align-center,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-align-center{text-align:left!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper{width:100%!important;max-width:560px!important;background:#fffdf8!important;border:3px solid #ffde73!important;border-radius:16px!important;margin:0!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody{padding:24px 24px 20px!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody h4,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody h4{font-family:Bitter,Georgia,"Times New Roman",serif!important;font-weight:700!important;font-size:1.625rem!important;line-height:1.2!important;color:#1e3a5f!important;margin:0 0 8px!important;text-align:left!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody p,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody p{font-family:Verdana,Geneva,"DejaVu Sans",sans-serif!important;font-size:1.125rem!important;line-height:1.5!important;color:#1f1d1a!important;text-align:left!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-successBody,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-successBody{padding:24px 24px 20px!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-successBody h4,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-successBody h4{font-family:Bitter,Georgia,"Times New Roman",serif!important;font-weight:700!important;font-size:1.625rem!important;line-height:1.2!important;color:#1e3a5f!important;margin:0 0 8px!important;text-align:left!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-successBody p,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-successBody p{font-family:Verdana,Geneva,"DejaVu Sans",sans-serif!important;font-size:1.125rem!important;line-height:1.5!important;color:#1f1d1a!important;text-align:left!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow input,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow input{font-family:Verdana,Geneva,"DejaVu Sans",sans-serif!important;font-size:1.25rem!important;line-height:1.3!important;color:#1f1d1a!important;background:#fff!important;min-height:56px!important;height:auto!important;padding:12px 16px!important;border:2px solid #4f483d!important;border-radius:10px!important;box-sizing:border-box!important;width:100%!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow input::placeholder,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow input::placeholder{color:#5f574b!important;opacity:1!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow input:focus,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow input:focus{outline:4px solid #0b5fff!important;outline-offset:2px!important;border-color:#1e3a5f!important;box-shadow:none!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow.ml-error input,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow.ml-error input{border-color:#b3261e!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-recaptcha,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-recaptcha{float:none!important;display:flex!important;justify-content:center!important;margin:14px 0 4px!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit{float:none!important;width:100%!important;margin:12px 0 0!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button.primary,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button.primary{width:100%!important;min-height:56px!important;height:auto!important;padding:12px 20px!important;font-family:Verdana,Geneva,"DejaVu Sans",sans-serif!important;font-size:1.25rem!important;font-weight:bold!important;line-height:1.25!important;background:#ffde73!important;color:#1e3a5f!important;border:2px solid #e3b33f!important;border-radius:12px!important;box-shadow:0 3px 0 rgba(0,0,0,.18)!important;cursor:pointer}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button.loading,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button.loading{width:100%!important;min-height:56px!important;height:auto!important;padding:12px 20px!important;font-family:Verdana,Geneva,"DejaVu Sans",sans-serif!important;font-size:1.25rem!important;font-weight:bold!important;line-height:1.25!important;background:#ffde73!important;color:#1e3a5f!important;border:2px solid #e3b33f!important;border-radius:12px!important;box-shadow:0 3px 0 rgba(0,0,0,.18)!important;cursor:pointer}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button.primary:hover,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button.primary:hover{background:#ffe68f!important;color:#1e3a5f!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button.primary:focus-visible,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button.primary:focus-visible{outline:4px solid #fff!important;outline-offset:3px!important}
+.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedPermissions,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedPermissions{font-size:1rem!important;line-height:1.5!important;color:#1f1d1a!important}
+@media(max-width:600px){.signup #mlb2-48911036.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody,.signup .ml-embedded .ml-form-embedContainer.ml-subscribe-form .ml-form-embedWrapper .ml-form-embedBody{padding:18px 16px 16px!important}}
+@media print{.signup{display:none!important}}"""
+HEAD_EXTRA = """<link rel="preload" href="/fonts/bitter-700.woff2" as="font" type="font/woff2" crossorigin><script>try{document.documentElement.dataset.ts=localStorage.getItem("bcpb-ts")||"1"}catch(e){}</script>"""
 
 SITE_LD = {"@context": "https://schema.org", "@graph": [
     {"@type": "Organization", "@id": f"{BASE}/#org", "name": "Big Clear Puzzle Books", "url": f"{BASE}/",
@@ -179,6 +314,54 @@ def crumbs_html(items):
     return '<p class="crumbs">' + " › ".join(f'<a href="{u}">{E(n)}</a>' if u else E(n) for n, u in items) + "</p>"
 
 
+
+# ===== design-review: presentation helpers (markup around content only; no SEO text changes) =====
+def restyle(s):
+    """Give every button a kind so Download / Etsy / Amazon / internal links look different."""
+    def f(m):
+        cls, href = m.group(1), m.group(2)
+        kind = ("dl" if href.startswith("/downloads/") else "etsy" if href.startswith(SHOP) else
+                "amz" if "amazon.com" in href else ("go" if cls == "btn" else "go2"))
+        return f'<a class="btn {kind}" href="{href}"'
+    s = re.sub(r'<a class="(btn(?: alt)?)" href="([^"]+)"', f, s)
+    return s.replace('<div class="box"><b>Want more?</b>', '<div class="box buy"><b>Want more?</b>')
+
+
+def nav_html(path, crumbs):
+    sec = "/" + path
+    if crumbs and len(crumbs) > 1 and crumbs[1][1]: sec = crumbs[1][1]
+    def a(href, label, cls=""):
+        c = f' class="{cls}"' if cls else ""
+        cur = ' aria-current="page"' if href == sec else ""
+        return f'<a{c} href="{href}"{cur}>{label}</a>'
+    main = '<nav class="main" aria-label="Main">' + a("/word-search/", "Word Search") + a("/sudoku/", "Sudoku") + a("/books/", "Books") + "</nav>"
+    util = ('<nav class="util" aria-label="More">' + a("/activity-directors/", "Activity directors") + a("/#signup", "Free monthly pack", "nav-pack")
+            + a(SHOP, "Shop", "nav-shop") + "</nav>")
+    return main, util
+
+
+def footer_html():
+    return f"""<footer class="site"><div class="w ft">
+<div class="ft-about"><p class="ft-brand"><img src="/img/icon.png" alt="" width="56" height="56" data-pin-nopin="true"><b>Big Clear Puzzle Books</b></p>
+<p>Large-print word searches and sudoku that are easy to see and always right.</p></div>
+<div><p class="ft-h">Shop &amp; follow</p><ul><li><a href="{SHOP}">Etsy shop</a></li><li><a href="{AMAZON_AUTHOR}">Paperbacks by Callan Brooks on Amazon</a></li>
+<li><a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a></li><li><a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a></li></ul></div>
+<div><p class="ft-h">Guides</p><ul><li><a href="/books/">All our books</a></li><li><a href="/dementia-friendly-printables/">Dementia-friendly printables</a></li>
+<li><a href="/large-print-font-size/">What font size is large print?</a></li><li><a href="/activity-directors/">For activity directors</a></li></ul></div>
+<p class="ft-note">Free printables are for personal, family, classroom and activity-group use. Please share the link, not the file.</p>
+</div></footer>"""
+
+TSIZE = ('<div class="tsize" role="group" aria-label="Text size"><span>Text size</span><button type="button" data-s="1" aria-pressed="true">A</button>'
+         '<button type="button" data-s="2" aria-pressed="false">A+</button><button type="button" data-s="3" aria-pressed="false">A++</button></div>'
+         '<script>(function(){var d=document.documentElement;function a(v){d.dataset.ts=v;document.querySelectorAll(".tsize button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.s==v)});'
+         'try{localStorage.setItem("bcpb-ts",v)}catch(e){}}a(d.dataset.ts||"1");document.addEventListener("click",function(e){var b=e.target.closest(".tsize button");if(b)a(b.dataset.s)})})()</script>')
+def shell_top(path, crumbs):
+    main, util = nav_html(path, crumbs)
+    return (f'<a class="skip" href="#main">Skip to main content</a><div class="topbar"><div class="w">{TSIZE}{util}</div></div>'
+            f'<header class="site-h"><div class="w"><a class="brand" href="/"><img src="/img/icon.png" alt="" data-pin-nopin="true" width="66" height="66">'
+            f'<span><b>Big Clear Puzzle Books</b><small>Easy to see and always right</small></span></a>{main}</div></header>')
+
+
 def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(765, 990), img_alt="Large print puzzle page",
          og_type="article", graph=None, crumbs=None, noindex=False):
     canonical = BASE + "/" + path
@@ -193,6 +376,7 @@ def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(76
             pin_attr = f' data-pin-media="{BASE}{share}" data-pin-description="{E(h1)}. Printable PDF with answer key from Big Clear Puzzle Books."'
             body = body.replace(f'<img src="{image}"', f'<img src="{image}"{pin_attr}', 1)
             image, img_wh = share, (1000, 1500)
+    body = restyle(body)
     nodes = list(graph or []) + ([crumbs_ld(crumbs)] if crumbs else [])
     page_ld = ld({"@context": "https://schema.org", "@graph": nodes}) if nodes else ""
     robots = '<meta name="robots" content="noindex">' if noindex else f'<link rel="canonical" href="{canonical}">'
@@ -204,14 +388,10 @@ def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(76
 <meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{canonical}">
 <meta property="og:image" content="{BASE}{image}"><meta property="og:image:width" content="{img_wh[0]}"><meta property="og:image:height" content="{img_wh[1]}"><meta property="og:image:alt" content="{E(img_alt)}">
 <meta name="twitter:card" content="summary_large_image"><meta name="p:domain_verify" content="5f2e6b6f365deaad7f1cde96575db747"/>
-{ld(SITE_LD)}{page_ld}{ML_SCRIPT}{PIN_SCRIPT}<style>{CSS}</style></head><body>
-<header><div class="w"><img src="/img/icon.png" alt="" data-pin-nopin="true"><a href="/">Big Clear Puzzle Books</a>
-<nav><a href="/word-search/">Word Search</a><a href="/sudoku/">Sudoku</a><a href="/#signup">Free monthly pack</a><a href="/books/">Books</a><a href="/activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
-<main class="w">{crumbs_html(crumbs) if crumbs else ""}{body}</main>
-<footer><div class="w">Big Clear Puzzle Books · Large-print word searches and sudoku that are easy to see and always right.
-· <a href="{SHOP}">Etsy shop</a> · <a href="{AMAZON_AUTHOR}">Paperbacks by Callan Brooks on Amazon</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a> · <a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a><br>
-Guides: <a href="/books/">All our books</a> · <a href="/dementia-friendly-printables/">Dementia-friendly printables</a> · <a href="/large-print-font-size/">What font size is large print?</a> · <a href="/activity-directors/">For activity directors</a><br>
-Free printables are for personal, family, classroom and activity-group use. Please share the link, not the file.</div></footer>
+{ld(SITE_LD)}{page_ld}{ML_SCRIPT}{PIN_SCRIPT}{HEAD_EXTRA}<style>{CSS}</style></head><body class="{'free' if path.startswith('free/') else 'pg'}">
+{shell_top(path, crumbs)}
+<main class="w" id="main">{crumbs_html(crumbs) if crumbs else ""}{body}</main>
+{footer_html()}
 </body></html>"""
 
 
@@ -280,7 +460,7 @@ def doc_ld(name, url, image, pdf, keywords, series=True):
 urls = [BASE + "/"]; pdf_pages = []   # (pdf, page path) for _headers
 def card(k, up="/"):
     b = books[k]; slug = SEO[k][0]
-    return (f'<div class="card"><a href="/free/{slug}/"><img src="/img/{k}-preview.jpg" alt="Free large print {E(b["name"])} word search: {E(b["puzzle_title"][3:])}" '
+    return (f'<div class="card pz"><a href="/free/{slug}/"><img src="/img/{k}-preview.jpg" alt="Free large print {E(b["name"])} word search: {E(b["puzzle_title"][3:])}" '
             f'loading="lazy" width="765" height="990"></a><h3><a href="/free/{slug}/">{E(b["name"])}</a></h3>'
             f'<p>{E(b["puzzle_title"][3:])} · free PDF</p></div>')
 
@@ -298,7 +478,7 @@ def xalt(x):
 
 def xcard(x, up="/"):
     label = "Sudoku" if x.get("sudoku") else ("Extra Easy" if x.get("extra_easy") else ("Thanksgiving" if x.get("seasonal") else books[x["book"]]["name"]))
-    return (f'<div class="card"><a href="/free/{x["slug"]}/"><img src="/img/{x["key"]}-preview.jpg" alt="{E(xalt(x))}" '
+    return (f'<div class="card pz"><a href="/free/{x["slug"]}/"><img src="/img/{x["key"]}-preview.jpg" alt="{E(xalt(x))}" '
             f'loading="lazy" width="765" height="990"></a><h3><a href="/free/{x["slug"]}/">{E(x["puzzle_title"])}</a></h3>'
             f'<p>{label} · free PDF</p></div>')
 
@@ -320,15 +500,14 @@ for k in ORDER:
     qa = faq_ws(len(words) or "the"); faq_html, faq_ld = faq_block(qa)
     mine = [x for x in ws_extras if x["book"] == k]
     body = f"""<h1>{E(h1)}</h1><p class="lead">{E(intro)}</p>
-<div class="two"><div><img src="/img/{k}-preview.jpg" alt="Large print {E(TEXT_NAME[k])} word search “{E(puzzle)}” with answer key" width="765" height="990"></div>
-<div><p><a class="btn" href="/downloads/{b['pdf']}" download>Download the free PDF</a></p>
-<ul><li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large letters: 21 pt bold grid, 18 pt word list</li>
-<li>Words read forward, down or diagonally. Nothing backwards</li><li>Answer key on page 2</li><li>Checked by computer: every word is there exactly once</li></ul>
+<div class="getit"><div class="pv"><img src="/img/{k}-preview.jpg" alt="Large print {E(TEXT_NAME[k])} word search “{E(puzzle)}” with answer key" width="765" height="990"></div>
+<div class="act"><p class="dlrow"><a class="btn" href="/downloads/{b['pdf']}" download>Download the free PDF</a></p>
+<ul class="ticks"><li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large letters: 21 pt bold grid, 18 pt word list</li>
+<li>Words read forward, down or diagonally. Nothing backwards</li><li>Answer key on page 2</li><li>Checked by computer: every word is there exactly once</li></ul></div></div>
+<section class="wl"><h2>{E(puzzle)}: puzzle 1 of the {E(b['name'])} book</h2>{words_block(words)}<p>{E(USE_TIP[k])}</p></section>
 <div class="box"><b>Want more?</b> This puzzle comes from the full <b>{E(b['name'])}</b> book: 50 large-print puzzles, one per page, with every solution.
 <br><a class="btn alt" href="{SHOP}/listing/{b['listing']}">Get all 50 puzzles (printable PDF)</a>{extra}</div>
-<p>Running activities for a whole community? The <a href="/activity-directors/">Activity Director Pack</a> has all 7 books (350 puzzles) with a facility license.</p>
-</div></div>
-<h2>{E(puzzle)}: puzzle 1 of the {E(b['name'])} book</h2>{words_block(words)}<p>{E(USE_TIP[k])}</p>
+<p class="adline">Running activities for a whole community? The <a href="/activity-directors/">Activity Director Pack</a> has all 7 books (350 puzzles) with a facility license.</p>
 {faq_html}
 <h2>More {E(b['name'])} puzzles, free</h2><div class="grid">{''.join(xcard(x) for x in mine)}</div>
 {signup()}<h2>More free large-print word searches</h2><div class="grid">{''.join(card(o) for o in ORDER if o != k)}</div>"""
@@ -392,10 +571,11 @@ for x in extras:
         more_title = "More free large-print puzzles"
     faq_html, faq_ld = faq_block(qa)
     body = f"""<h1>{E(h1[0].upper() + h1[1:])}</h1><p class="lead">{E(x['intro'])}</p>
-<div class="two"><div><img src="/img/{x['key']}-preview.jpg" alt="{E(xalt(x))}" width="765" height="990"></div>
-<div><p><a class="btn" href="/downloads/{x['pdf']}" download>Download the free PDF</a></p><ul>{bullets}</ul>{more}
-<p>Running activities for a whole community? The <a href="/activity-directors/">Activity Director Pack</a> has 350 word searches with a facility license.</p>
-</div></div>{detail}{faq_html}{signup()}<h2>{more_title}</h2><div class="grid">{grid}</div>"""
+<div class="getit"><div class="pv"><img src="/img/{x['key']}-preview.jpg" alt="{E(xalt(x))}" width="765" height="990"></div>
+<div class="act"><p class="dlrow"><a class="btn" href="/downloads/{x['pdf']}" download>Download the free PDF</a></p><ul class="ticks">{bullets}</ul></div></div>
+<section class="wl">{detail}</section>{more}
+<p class="adline">Running activities for a whole community? The <a href="/activity-directors/">Activity Director Pack</a> has 350 word searches with a facility license.</p>
+{faq_html}{signup()}<h2>{more_title}</h2><div class="grid">{grid}</div>"""
     write(path + "index.html", page(path, title, meta, body, image=f"/img/{x['key']}-preview.jpg", img_alt=xalt(x),
                                      graph=[doc, faq_ld], crumbs=crumbs))
 
@@ -410,14 +590,14 @@ SUDOKU_ON_ETSY = True     # True once the 7 drafts are published; until then but
 def sd_card(v, lv, lid, up="/"):
     href = f"{SHOP}/listing/{lid}" if SUDOKU_ON_ETSY else SHOP
     amz = f'<br><a href="https://www.amazon.com/dp/{SUDOKU_ASIN[v]}">Paperback on Amazon</a>' if v in SUDOKU_ASIN else ""
-    return (f'<div class="card"><a href="{href}"><img src="/img/cover-sudoku-{v}.jpg" alt="Large Print Sudoku for Seniors volume {v}, {lv}" '
+    return (f'<div class="card bk"><a href="{href}"><img src="/img/cover-sudoku-{v}.jpg" alt="Large Print Sudoku for Seniors volume {v}, {lv}" '
             f'loading="lazy" width="340" height="440"></a><h3>Volume {v}: {lv}</h3><p>100 puzzles · <a href="{href}">Printable PDF</a>{amz}</p></div>')
 
 
 def ws_book(k, up="/"):
     b = books[k]; slug = SEO[k][0]
     amz = f' · <a href="https://www.amazon.com/dp/{b["asin"]}">Paperback</a>' if b.get("asin") else ""
-    return (f'<div class="card"><a href="/free/{slug}/"><img src="/img/cover-{k}.jpg" alt="Large Print Word Search for Seniors: {E(b["name"])}" '
+    return (f'<div class="card bk"><a href="/free/{slug}/"><img src="/img/cover-{k}.jpg" alt="Large Print Word Search for Seniors: {E(b["name"])}" '
             f'loading="lazy" width="340" height="440"></a><h3>{E(b["name"])}</h3>'
             f'<p><a href="/free/{slug}/">Free puzzle</a> · <a href="{SHOP}/listing/{b["listing"]}">Printable PDF</a>{amz}</p></div>')
 
@@ -601,7 +781,7 @@ path = "books/"; url = BASE + "/" + path; urls.append(url)
 def book_card(k):
     b = books[k]
     amz = f'<a class="btn" href="https://www.amazon.com/dp/{b["asin"]}">Paperback on Amazon</a>' if b.get("asin") else '<p class="small">Paperback coming soon</p>'
-    return (f'<div class="card"><img src="/img/cover-{k}.jpg" alt="Large Print Word Search for Seniors: {E(b["name"])} by Callan Brooks" loading="lazy" width="340" height="440">'
+    return (f'<div class="card bk"><img src="/img/cover-{k}.jpg" alt="Large Print Word Search for Seniors: {E(b["name"])} by Callan Brooks" loading="lazy" width="340" height="440">'
             f'<h3>{E(b["name"])}</h3><p>{E(BOOK_BLURB[k])}</p><p>50 puzzles · 80 pages · 8.5 x 11 in</p>{amz}'
             f'<p><a href="{SHOP}/listing/{b["listing"]}">Printable PDF on Etsy</a> · <a href="/free/{SEO[k][0]}/">Free sample puzzle</a></p></div>')
 body = f"""<h1>Large print word search books by Callan Brooks</h1>
@@ -624,23 +804,32 @@ live = [k for k in ORDER if books[k].get("asin")]
 paperbacks = (f"<h2>Paperbacks on Amazon</h2><p>Prefer a real book? Printed paperbacks by Callan Brooks, 8.5 x 11 in. A good gift. <a href=\"{AMAZON_SERIES}\">See the whole series on Amazon</a> or <a href=\"/books/\">browse all our books</a>.</p><p>"
               + "".join(f'<a class="btn alt" href="https://www.amazon.com/dp/{books[k]["asin"]}">{E(books[k]["name"])}</a>' for k in live)
               + "</p>") if live else ""
-body = f"""<h1>Free large-print puzzles for seniors</h1>
-<p class="lead">Big, clear word searches and sudoku that are easy to see and always right. Print free samples, then get the full books on Etsy or Amazon.</p>
-<div class="series">
-<a class="tile" href="/word-search/"><img src="/img/cover-christmas.jpg" alt="Large print word search books" width="340" height="440">
-<span><b>Word Search</b>7 themed books, 50 puzzles each<br>{WS_N} free printables<em>Browse word searches →</em></span></a>
-<a class="tile" href="/sudoku/"><img src="/img/cover-sudoku-1.jpg" alt="Large print sudoku books" width="340" height="440">
-<span><b>Sudoku</b>7 books, Easy to Hard, 100 puzzles each<br>{len(sd_extras)} free printables<em>Browse sudoku →</em></span></a>
-</div>
+H_LEAD = '<p class="lead">Big, clear word searches and sudoku that are easy to see and always right. Print free samples, then get the full books on Etsy or Amazon.</p>'
+H_TILES = (f'<a class="tile" href="/word-search/"><img src="/img/cover-christmas.jpg" alt="Large print word search books" width="340" height="440">'
+           f'<span><b>Word Search</b>7 themed books, 50 puzzles each<br>{WS_N} free printables<em>Browse word searches →</em></span></a>'
+           f'<a class="tile" href="/sudoku/"><img src="/img/cover-sudoku-1.jpg" alt="Large print sudoku books" width="340" height="440">'
+           f'<span><b>Sudoku</b>7 books, Easy to Hard, 100 puzzles each<br>{len(sd_extras)} free printables<em>Browse sudoku →</em></span></a>')
+H_SEASON = f'<h2 id="thanksgiving">This week: Thanksgiving</h2><div class="grid">{"".join(xcard(x) for x in seasonal)}</div>'
+H_WS = (f'<h2>Free word searches</h2><div class="grid">{"".join(card(o) for o in ORDER[:6])}</div>'
+        f'<p><a class="btn alt" href="/word-search/">See all {WS_N} free word searches</a></p>')
+H_SD = (f'<h2>Free sudoku</h2><div class="grid">{"".join(xcard(x) for x in sd_extras[:3])}</div>'
+        f'<p><a class="btn alt" href="/sudoku/">See the sudoku series</a></p>')
+H_AD = ('<h2>For activity directors and memory care</h2><p>Facility print license, word search and sudoku: <a href="/activity-directors/">see the activity director page</a>, '
+        'or read our guide to <a href="/dementia-friendly-printables/">dementia-friendly printables</a>.</p>')
+H_WHY = ('<h2>What makes them different</h2><ul><li>One puzzle per page with extra-large bold letters and numbers (<a href="/large-print-font-size/">what counts as large print?</a>)</li>'
+         '<li>Word search words read forward, down or diagonally, never backwards</li>\n<li>A computer checks every puzzle, and every answer is in the back</li></ul>')
+H_BOOKS = ('<a class="tile" href="/books/"><img src="/img/cover-nostalgia.jpg" alt="" width="340" height="440" data-pin-nopin="true">'
+           '<span><b>Books</b>Paperbacks on Amazon, printable PDFs on Etsy.<em>All our books →</em></span></a>')
+body = f"""<section class="hero"><div><h1>Free large-print puzzles for seniors</h1>{H_LEAD}
+<p class="hero-cta"><a class="btn" href="/word-search/">Free word searches</a><a class="btn alt" href="/sudoku/">Free sudoku</a></p></div>
+<div class="hero-art" aria-hidden="true"><img class="c1" src="/img/cover-hymns.jpg" alt="" width="340" height="440" data-pin-nopin="true"><img class="c2" src="/img/cover-sudoku-1.jpg" alt="" width="340" height="440" data-pin-nopin="true"><img class="c3" src="/img/christmas-preview.jpg" alt="" width="765" height="990" data-pin-nopin="true"></div></section>
+<section class="why">{H_WHY}</section>
+<div class="series">{H_TILES}{H_BOOKS}</div>
+{H_SEASON}
 {signup()}
-<h2 id="thanksgiving">This week: Thanksgiving</h2><div class="grid">{"".join(xcard(x) for x in seasonal)}</div>
-<h2>Free word searches</h2><div class="grid">{"".join(card(o) for o in ORDER[:6])}</div>
-<p><a class="btn alt" href="/word-search/">See all {WS_N} free word searches</a></p>
-<h2>Free sudoku</h2><div class="grid">{"".join(xcard(x) for x in sd_extras[:3])}</div>
-<p><a class="btn alt" href="/sudoku/">See the sudoku series</a></p>
-{paperbacks}<h2>For activity directors and memory care</h2><p>Facility print license, word search and sudoku: <a href="/activity-directors/">see the activity director page</a>, or read our guide to <a href="/dementia-friendly-printables/">dementia-friendly printables</a>.</p>
-<h2>What makes them different</h2><ul><li>One puzzle per page with extra-large bold letters and numbers (<a href="/large-print-font-size/">what counts as large print?</a>)</li><li>Word search words read forward, down or diagonally, never backwards</li>
-<li>A computer checks every puzzle, and every answer is in the back</li></ul>"""
+{H_WS}
+{H_SD}
+{paperbacks}<section class="box">{H_AD}</section>"""
 write("index.html", page("", "Free Large Print Word Search & Sudoku Printables for Seniors",
       "Free printable large-print word searches and sudoku for seniors, adults and memory care. 21 pt bold letters, one puzzle per page, answer key included.",
       body, image="/img/christmas-preview.jpg", img_alt="Large print Christmas word search page", og_type="website"))
@@ -654,7 +843,7 @@ body404 = """<h1>Sorry, we can't find that page</h1><p>The link may be old or mi
 <li><a href="/activity-directors/">For activity directors and memory care</a></li></ul>"""
 write("404.html", page("404.html", "Page not found | Big Clear Puzzle Books", "Page not found.", body404, noindex=True))
 write("_headers", "".join(f'/downloads/{pdf}\n  Link: <{BASE}/{p}>; rel="canonical"\n' for pdf, p in pdf_pages)
-      + "/downloads/custom/*\n  X-Robots-Tag: noindex\n/downloads/packs/*\n  X-Robots-Tag: noindex\n")
+      + "/downloads/custom/*\n  X-Robots-Tag: noindex\n/downloads/packs/*\n  X-Robots-Tag: noindex\n/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n")
 
 
 def lastmod(u):
