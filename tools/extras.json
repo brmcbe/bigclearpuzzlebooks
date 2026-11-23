@@ -206,6 +206,17 @@
   "intro": "A medium sudoku in extra-large print: it takes a few logic steps (pairs and box lines), never guessing. Solution included."
  },
  {
+  "key": "sudoku-medium-2",
+  "book": null,
+  "slug": "medium-sudoku-printable-large-print-2",
+  "puzzle_title": "Medium Sudoku 2",
+  "pdf": "free-large-print-sudoku-medium-2.pdf",
+  "sudoku": true,
+  "title": "Free Medium Sudoku Printable, Large Print #2 (Solution Included)",
+  "h1": "Free large-print medium sudoku #2",
+  "intro": "Another medium sudoku in extra-large print, from volume 5 of the series. Logic only, no guessing. Solution included."
+ },
+ {
   "key": "sudoku-hard",
   "book": null,
   "slug": "hard-sudoku-large-print-printable",
@@ -215,5 +226,16 @@
   "title": "Free Printable Hard Sudoku in Large Print (Solution Included)",
   "h1": "Free large-print hard sudoku",
   "intro": "A hard sudoku with big, clear numbers for experienced solvers. Exactly one answer, checked by computer. Solution included."
+ },
+ {
+  "key": "sudoku-hard-2",
+  "book": null,
+  "slug": "hard-sudoku-printable-large-print-2",
+  "puzzle_title": "Hard Sudoku 2",
+  "pdf": "free-large-print-sudoku-hard-2.pdf",
+  "sudoku": true,
+  "title": "Free Hard Sudoku Printable, Large Print #2 (Solution Included)",
+  "h1": "Free large-print hard sudoku #2",
+  "intro": "A second hard sudoku with big, clear numbers, from volume 6 of the series. Exactly one answer, checked by computer. Solution included."
  }
 ]

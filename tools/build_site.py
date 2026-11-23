@@ -228,7 +228,7 @@ body = f"""<h1>Free large-print puzzles for seniors</h1>
 <a class="tile" href="word-search/"><img src="img/cover-christmas.jpg" alt="Large print word search books" width="340" height="440">
 <span><b>Word Search</b>7 themed books, 50 puzzles each<br>21 free printables<em>Browse word searches →</em></span></a>
 <a class="tile" href="sudoku/"><img src="img/cover-sudoku-1.jpg" alt="Large print sudoku books" width="340" height="440">
-<span><b>Sudoku</b>7 books, Easy to Hard, 100 puzzles each<br>4 free printables<em>Browse sudoku →</em></span></a>
+<span><b>Sudoku</b>7 books, Easy to Hard, 100 puzzles each<br>6 free printables<em>Browse sudoku →</em></span></a>
 </div>
 {signup("")}
 <h2>This week: Thanksgiving</h2><div class="grid">{"".join(xcard(x, "") for x in seasonal)}</div>
