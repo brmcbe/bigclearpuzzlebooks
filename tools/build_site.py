@@ -34,6 +34,7 @@ SEO = {  # slug, page title, h1, intro sentence
 }
 ORDER = ["christmas", "winter", "bible", "hymns", "nostalgia", "garden", "cooking"]
 
+ML_SCRIPT = """<script>(function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[]).push(arguments);},l=d.createElement(e),l.async=1,l.src=u,n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})(window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');ml('account','2817294');</script>"""
 CSS = """*{box-sizing:border-box}body{margin:0;font-family:Verdana,Geneva,'DejaVu Sans',sans-serif;font-size:20px;line-height:1.6;color:#1b1b1b;background:#faf7f0}
 a{color:#1f3a5f}header{background:#1f3a5f;color:#fff}header .w{display:flex;align-items:center;gap:16px;padding:14px 20px}
 header img{width:56px;height:56px;border-radius:50%;background:#fff}header a{color:#fff;text-decoration:none;font-weight:bold;font-size:24px}
@@ -60,7 +61,7 @@ def page(path, title, desc, body, canonical):
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{canonical}"><link rel="icon" href="{up}img/favicon.png"><link rel="apple-touch-icon" href="{up}img/apple-touch-icon.png">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}">
-<meta property="og:image" content="{BASE}/img/christmas-preview.jpg"><meta name="p:domain_verify" content="5f2e6b6f365deaad7f1cde96575db747"/><style>{CSS}</style></head><body>
+<meta property="og:image" content="{BASE}/img/christmas-preview.jpg"><meta name="p:domain_verify" content="5f2e6b6f365deaad7f1cde96575db747"/>{ML_SCRIPT}<style>{CSS}</style></head><body>
 <header><div class="w"><img src="{up}img/icon.png" alt=""><a href="{up}">Big Clear Puzzle Books</a>
 <nav><a href="{up}word-search/">Word Search</a><a href="{up}sudoku/">Sudoku</a><a href="{up}#signup">Free monthly pack</a><a href="{up}activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
 <main class="w">{body}</main>
@@ -73,6 +74,13 @@ Free printables are for personal, family, classroom and activity-group use. Plea
 def write(rel, text):
     p = os.path.join(ROOT, rel); os.makedirs(os.path.dirname(p) or ROOT, exist_ok=True); open(p, "w").write(text)
 
+
+ML_FORM = "75aY4B"       # MailerLite embedded form "Website - Monthly Activity Pack" (account 2817294, group Monthly Activity Pack)
+def signup(up=""):
+    return f"""<div class="signup" id="signup"><h2>Get a free puzzle pack every month</h2>
+<p>December's pack is ready: 5 holiday word searches and 3 sudoku in large print, with solutions. Sign up and it arrives by email in a few minutes.</p>
+<div class="ml-embedded" data-form="{ML_FORM}"></div>
+<p class="small">For seniors, families and activity directors. We never share your email, and you can unsubscribe anytime.</p></div>"""
 
 urls = [BASE + "/"]
 # free pages
@@ -99,7 +107,7 @@ for k in ORDER:
 <br><a class="btn alt" href="{SHOP}/listing/{b['listing']}">Get all 50 puzzles (printable PDF)</a>{extra}</div>
 <p>Running activities for a whole community? The <a href="../../activity-directors/">Activity Director Pack</a> has all 7 books (350 puzzles) with a facility license.</p>
 </div></div>
-<h2>More free large-print word searches</h2><div class="grid">{''.join(card(o) for o in ORDER if o != k)}</div>"""
+{signup("../../")}<h2>More free large-print word searches</h2><div class="grid">{''.join(card(o) for o in ORDER if o != k)}</div>"""
     write(f"free/{slug}/index.html", page(f"free/{slug}/", title, intro + " Free printable PDF with solution.", body, url))
 
 # extra free pages (tools/extras.json): more puzzles per book, seasonal, sudoku
@@ -127,7 +135,7 @@ for x in extras:
 <div class="two"><div><img src="../../img/{x['key']}-preview.jpg" alt="{html.escape(x['title'])}" width="765" height="990"></div>
 <div><p><a class="btn" href="../../downloads/{x['pdf']}" download>Download the free PDF</a></p><ul>{bullets}</ul>{more}
 <p>Running activities for a whole community? The <a href="../../activity-directors/">Activity Director Pack</a> has all 7 books (350 puzzles) with a facility license.</p>
-</div></div><h2>More free large-print puzzles</h2><div class="grid">{grid}</div>"""
+</div></div>{signup("../../")}<h2>More free large-print puzzles</h2><div class="grid">{grid}</div>"""
     write(f"free/{x['slug']}/index.html", page(f"free/{x['slug']}/", x["title"], x["intro"] + " Free printable PDF with solution.", body, url))
 
 # ---------- shared blocks ----------
@@ -136,23 +144,9 @@ SUDOKU = [  # volume, level, Etsy listing (published by Brad), Amazon ASIN when 
     (5, "Medium", 4623570864), (6, "Medium to Hard", 4623564155), (7, "Hard", 4623571180)]
 SUDOKU_ASIN = {}          # volume -> ASIN once Live on Amazon
 SUDOKU_ON_ETSY = True     # True once the 7 drafts are published; until then buttons go to the shop home
-ML_ACTION = ""            # MailerLite embedded-form subscribe URL (set below once the form exists)
 ws_extras = [x for x in extras if not x.get("seasonal") and not x.get("sudoku")]
 sd_extras = [x for x in extras if x.get("sudoku")]
 seasonal = [x for x in extras if x.get("seasonal")]
-
-def signup(up=""):
-    if not ML_ACTION:
-        return ""
-    return f"""<div class="signup" id="signup"><h2>Get a free activity pack every month</h2>
-<p>8 large-print puzzles (word search and sudoku) with solutions, in your inbox at the start of each month. Free. Unsubscribe anytime.
-December's pack is ready now.</p>
-<form action="{ML_ACTION}" method="post" class="sf">
-<input type="text" name="fields[name]" placeholder="First name" aria-label="First name">
-<input type="email" name="fields[email]" placeholder="Email address" aria-label="Email address" required>
-<input type="hidden" name="ml-submit" value="1"><input type="hidden" name="anticsrf" value="true">
-<button type="submit" class="btn">Send me the free pack</button></form>
-<p class="small">For seniors, families and activity directors. We never share your email.</p></div>"""
 
 def sd_card(v, lv, lid, up):
     href = f"{SHOP}/listing/{lid}" if SUDOKU_ON_ETSY else SHOP
