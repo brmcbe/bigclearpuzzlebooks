@@ -60,7 +60,7 @@ def page(path, title, desc, body, canonical):
 <header><div class="w"><img src="{up}img/icon.png" alt=""><a href="{up}">Big Clear Puzzle Books</a>
 <nav><a href="{up}#free">Free printables</a><a href="{up}activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
 <main class="w">{body}</main>
-<footer><div class="w">Big Clear Puzzle Books · Large-print word searches that are easy to see and always right.
+<footer><div class="w">Big Clear Puzzle Books · Large-print word searches and sudoku that are easy to see and always right.
 · <a href="{SHOP}">Etsy shop</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a> · <a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a><br>
 Free printables are for personal, family, classroom and activity-group use. Please share the link, not the file.</div></footer>
 </body></html>"""
@@ -107,9 +107,9 @@ def xcard(x, up="../../"):
 for x in extras:
     url = f"{BASE}/free/{x['slug']}/"; urls.append(url); k = x["book"]
     if x.get("sudoku"):
-        more = (f'<div class="box"><b>Want more?</b> The <b>Large Print Sudoku for Seniors</b> book has 100 easy puzzles like this one, one per page, '
-                f'with every solution. Coming to Amazon and Etsy in early December.<br><a class="btn alt" href="{SHOP}">Visit the shop</a></div>')
-        bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>Easy: solvable by simple logic, no guessing</li><li>Solution on page 2</li><li>Checked by computer: exactly one answer</li>"
+        more = (f'<div class="box"><b>Want more?</b> Each <b>Large Print Sudoku for Seniors</b> book has 100 puzzles like this one, one per page, '
+                f'with every solution. The series has 7 volumes, from Easy to Hard.<br><a class="btn alt" href="{SHOP}">See the sudoku books (printable PDF)</a></div>')
+        bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>Difficulty checked by a logic solver</li><li>Solution on page 2</li><li>Checked by computer: exactly one answer</li>"
     else:
         b = books[k]; lead = ("Get ready for Christmas next: the full <b>Christmas</b> book has 50 large-print puzzles, one per page, with every solution."
                               if x.get("seasonal") else f"This puzzle comes from the full <b>{b['name']}</b> book: 50 large-print puzzles, one per page, with every solution.")
@@ -147,12 +147,12 @@ paperbacks = ("<h2>Paperbacks on Amazon</h2><p>Prefer a real book? These are pri
               + "".join(f'<a class="btn alt" href="https://www.amazon.com/dp/{books[k]["asin"]}">{html.escape(books[k]["name"])} paperback</a>' for k in live)
               + "</p>") if live else ""
 body = f"""<h1>Free large-print word search printables for seniors</h1>
-<p class="lead">Big, clear puzzles that are easy to see and always right. Print one free, then get the full books on Etsy.</p>
+<p class="lead">Big, clear word searches and sudoku that are easy to see and always right. Print one free, then get the full books on Etsy or Amazon.</p>
 <p><a class="btn" href="#free">Free printables</a><a class="btn alt" href="{SHOP}">Visit the shop</a></p>
 <h2 id="free">Free printable puzzles</h2><p>Each free PDF has one puzzle and its solution. New ones are added often.</p>
 <div class="grid">{''.join(card(o, '') for o in ORDER)}</div>
 <h2>Thanksgiving week</h2><div class="grid">{''.join(xcard(x, '') for x in extras if x.get('seasonal'))}</div>
-<h2>New: large-print sudoku</h2><div class="grid">{''.join(xcard(x, '') for x in extras if x.get('sudoku'))}</div>
+<h2>New: large-print sudoku, Easy to Hard</h2><p>Seven books of 100 big-number puzzles each. Try one of each level free.</p><div class="grid">{''.join(xcard(x, '') for x in extras if x.get('sudoku'))}</div>
 <h2>More free word searches</h2><div class="grid">{''.join(xcard(x, '') for x in extras if not x.get('seasonal') and not x.get('sudoku'))}</div>
 {paperbacks}<h2>For activity directors</h2><p>All 7 books, 350 puzzles, with a facility print license: <a href="activity-directors/">Activity Director Pack</a>.</p>
 <h2>What makes them different</h2><ul><li>One puzzle per page with extra-large bold letters</li><li>Words read forward, down or diagonally, never backwards</li>
