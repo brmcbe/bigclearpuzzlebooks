@@ -18,7 +18,8 @@ import json, os, datetime, html, subprocess
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "https://bigclearpuzzlebooks.com"
 SHOP = "https://bigclearpuzzlebooks.etsy.com"           # Share & Save format
-AMAZON_AUTHOR = "https://www.amazon.com/s?k=Callan+Brooks+large+print+word+search"
+AMAZON_SERIES = "https://www.amazon.com/dp/B0HRDKM5VV"                  # Amazon series page "Big Clear Puzzle Books" (all paperbacks)
+AMAZON_AUTHOR = "https://www.amazon.com/Callan-Brooks/e/B0HRK5K7FT"      # Callan Brooks author page
 PACK = 4615304644                                         # Activity Director Pack listing
 BUNDLES = {"christmas": 4615214324, "winter": 4615214324, "bible": 4615214518, "hymns": 4615214518}
 SAMPLER = 4615223623
@@ -120,8 +121,8 @@ SITE_LD = {"@context": "https://schema.org", "@graph": [
      "logo": f"{BASE}/img/icon.png", "email": "hello@bigclearpuzzlebooks.com",
      "sameAs": [SHOP, "https://www.pinterest.com/bigclearpuzzlebooks/"]},
     {"@type": "WebSite", "@id": f"{BASE}/#site", "url": f"{BASE}/", "name": "Big Clear Puzzle Books", "publisher": {"@id": f"{BASE}/#org"}},
-    {"@type": "Person", "@id": f"{BASE}/#callan-brooks", "name": "Callan Brooks", "worksFor": {"@id": f"{BASE}/#org"}},
-    {"@type": "BookSeries", "@id": f"{BASE}/#series", "name": "Big Clear Puzzle Books",
+    {"@type": "Person", "@id": f"{BASE}/#callan-brooks", "name": "Callan Brooks", "url": AMAZON_AUTHOR, "sameAs": [AMAZON_AUTHOR], "worksFor": {"@id": f"{BASE}/#org"}},
+    {"@type": "BookSeries", "@id": f"{BASE}/#series", "name": "Big Clear Puzzle Books", "url": AMAZON_SERIES,
      "author": {"@id": f"{BASE}/#callan-brooks"}, "publisher": {"@id": f"{BASE}/#org"}}]}
 
 
@@ -157,7 +158,7 @@ def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(76
 <nav><a href="/word-search/">Word Search</a><a href="/sudoku/">Sudoku</a><a href="/#signup">Free monthly pack</a><a href="/activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
 <main class="w">{crumbs_html(crumbs) if crumbs else ""}{body}</main>
 <footer><div class="w">Big Clear Puzzle Books · Large-print word searches and sudoku that are easy to see and always right.
-· <a href="{SHOP}">Etsy shop</a> · <a href="{AMAZON_AUTHOR}">Paperbacks by Callan Brooks on Amazon</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a> · <a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a><br>
+· <a href="{SHOP}">Etsy shop</a> · <a href="{AMAZON_SERIES}">Paperbacks by Callan Brooks on Amazon</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a> · <a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a><br>
 Guides: <a href="/dementia-friendly-printables/">Dementia-friendly printables</a> · <a href="/large-print-font-size/">What font size is large print?</a> · <a href="/activity-directors/">For activity directors</a><br>
 Free printables are for personal, family, classroom and activity-group use. Please share the link, not the file.</div></footer>
 </body></html>"""
@@ -504,7 +505,7 @@ write(path + "index.html", page(path, "What Font Size Is Large Print? 16, 18 or 
 
 # ---------- home ----------
 live = [k for k in ORDER if books[k].get("asin")]
-paperbacks = ("<h2>Paperbacks on Amazon</h2><p>Prefer a real book? Printed paperbacks by Callan Brooks, 8.5 x 11 in. A good gift.</p><p>"
+paperbacks = (f"<h2>Paperbacks on Amazon</h2><p>Prefer a real book? Printed paperbacks by Callan Brooks, 8.5 x 11 in. A good gift. <a href=\"{AMAZON_SERIES}\">See the whole series on Amazon</a>.</p><p>"
               + "".join(f'<a class="btn alt" href="https://www.amazon.com/dp/{books[k]["asin"]}">{E(books[k]["name"])}</a>' for k in live)
               + "</p>") if live else ""
 body = f"""<h1>Free large-print puzzles for seniors</h1>
