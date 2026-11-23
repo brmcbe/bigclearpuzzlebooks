@@ -448,5 +448,33 @@
   "BELLS",
   "ANGEL",
   "SNOWMAN"
+ ],
+ "christmas-6": [
+  "DASHER",
+  "DANCER",
+  "PRANCER",
+  "VIXEN",
+  "COMET",
+  "CUPID",
+  "DONNER",
+  "BLITZEN",
+  "ANTLERS",
+  "HOOVES",
+  "ROOFTOP",
+  "SLEIGH BELLS"
+ ],
+ "winter-7": [
+  "SKATES",
+  "RINK",
+  "BLADES",
+  "GLIDE",
+  "TWIRL",
+  "SPIN",
+  "POND",
+  "LACES",
+  "FIGURE EIGHT",
+  "COUPLES",
+  "WARMING HUT",
+  "BENCH"
  ]
 }

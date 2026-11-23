@@ -122,6 +122,11 @@ EXTRA_TITLE = {  # title-tag overrides where the pattern runs long or repeats it
     "nostalgia-3": "Drive-In Movie Night Word Search, Large Print 1950s (Free PDF)",
 }
 LEVEL = {"sudoku-1": "Easy", "sudoku-easy-2": "Easy", "sudoku-medium": "Medium", "sudoku-medium-2": "Medium", "sudoku-hard": "Hard", "sudoku-hard-2": "Hard"}
+for _x in extras:   # newer sudoku pages (growth builder) carry "level" in extras.json; title/h1/meta follow a pattern
+    if _x.get("sudoku") and _x["key"] not in LEVEL:
+        _lv = _x["level"]; _n = _x["puzzle_title"].split()[-1]; LEVEL[_x["key"]] = _lv
+        SUDOKU_SEO[_x["key"]] = (f"{_lv} Sudoku Large Print #{_n}: Free Printable with Answers", f"{_lv} sudoku large print #{_n}",
+                                 f"Free printable {_lv.lower()} sudoku #{_n} in large print: extra-large bold numbers, thick box lines, one puzzle per page, exactly one solution, answer key on page 2.")
 
 ML_SCRIPT = """<script>(function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[]).push(arguments);},l=d.createElement(e),l.async=1,l.src=u,n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})(window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');ml('account','2817294');</script>"""
 CSS = """*{box-sizing:border-box}body{margin:0;font-family:Verdana,Geneva,'DejaVu Sans',sans-serif;font-size:20px;line-height:1.6;color:#1b1b1b;background:#faf7f0}
@@ -440,7 +445,8 @@ write(path + "index.html", page(path, "Free Large Print Word Search Printables f
 
 # ---------- sudoku hub ----------
 path = "sudoku/"; url = BASE + "/" + path; urls.append(url)
-sd_qa = [("Is the large-print sudoku free?", "Yes. Six free puzzles (two Easy, two Medium, two Hard), each a one-page PDF with the answer key."),
+_lvn = {lv: sum(1 for x in sd_extras if LEVEL[x["key"]] == lv) for lv in ("Easy", "Medium", "Hard")}
+sd_qa = [("Is the large-print sudoku free?", f"Yes. {len(sd_extras)} free puzzles ({_lvn['Easy']} Easy, {_lvn['Medium']} Medium, {_lvn['Hard']} Hard), each a one-page PDF with the answer key."),
          ("How big are the numbers?", "Extra-large and bold (38 point), with thick lines around each 3 x 3 box, one puzzle per page."),
          ("Which level should I start with?", "Start with Easy: every square can be found with simple logic. Move to Medium when Easy feels quick. Hard is for experienced solvers.")]
 faq_html, faq_ld = faq_block(sd_qa)

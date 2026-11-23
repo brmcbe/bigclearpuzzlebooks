@@ -40,7 +40,7 @@ for x in extras:
                       "Extra easy large print word search for seniors and memory care: 10 x 10 grid, giant 34 pt letters, across or down only, answer key",
                       "extra easy word search, giant print word search, large print, seniors, memory care, printable, answer key", SHOP, SERIES))
     elif x.get("sudoku"):
-        lv = LEVEL[x["key"]]
+        lv = x.get("level") or LEVEL[x["key"]]
         items.append((x["pdf"], url, f"Free Large Print {lv} Sudoku: {x['puzzle_title']} | Big Clear Puzzle Books",
                       f"Large print {lv.lower()} sudoku for seniors and adults: big bold numbers, one puzzle per page, answer key",
                       f"large print sudoku, {lv.lower()} sudoku, seniors, printable, answer key", SHOP, AUTHOR))

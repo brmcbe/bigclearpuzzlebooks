@@ -343,5 +343,49 @@
   "title": "",
   "h1": "",
   "intro": "An extra easy \"Christmas\" word search with giant letters: a small 10 x 10 grid, 7 short words, and words that only read across or down."
+ },
+ {
+  "key": "christmas-6",
+  "book": "christmas",
+  "slug": "christmas-the-reindeer-word-search",
+  "puzzle_title": "The Reindeer",
+  "pdf": "free-large-print-christmas-6-word-search.pdf",
+  "title": "Free Printable Large Print Christmas Word Search: The Reindeer",
+  "h1": "Free large-print Christmas word search: The Reindeer",
+  "intro": "A big, easy-to-read \"The Reindeer\" Christmas word search for seniors, memory care groups and holiday parties. One puzzle per page with the solution."
+ },
+ {
+  "key": "sudoku-easy-3",
+  "book": null,
+  "slug": "easy-sudoku-large-print-printable-3",
+  "puzzle_title": "Easy Sudoku 3",
+  "pdf": "free-large-print-sudoku-easy-3.pdf",
+  "sudoku": true,
+  "level": "Easy",
+  "title": "Easy Sudoku Large Print #3: Free Printable with Answers",
+  "h1": "Easy sudoku large print #3",
+  "intro": "A third easy, big-number sudoku for beginners and seniors: one puzzle per page with the solution."
+ },
+ {
+  "key": "winter-7",
+  "book": "winter",
+  "slug": "winter-ice-skating-word-search",
+  "puzzle_title": "Ice Skating",
+  "pdf": "free-large-print-winter-7-word-search.pdf",
+  "title": "Free Printable Large Print Winter Word Search: Ice Skating",
+  "h1": "Free large-print winter word search: Ice Skating",
+  "intro": "A big, easy-to-read \"Ice Skating\" winter word search for seniors, memory care groups and snowy-day activities. One puzzle per page with the solution."
+ },
+ {
+  "key": "sudoku-medium-3",
+  "book": null,
+  "slug": "medium-sudoku-printable-large-print-3",
+  "puzzle_title": "Medium Sudoku 3",
+  "pdf": "free-large-print-sudoku-medium-3.pdf",
+  "sudoku": true,
+  "level": "Medium",
+  "title": "Medium Sudoku Large Print #3: Free Printable with Answers",
+  "h1": "Medium sudoku large print #3",
+  "intro": "Another free medium sudoku with extra-large numbers and thick box lines. One puzzle per page with the solution."
  }
 ]
