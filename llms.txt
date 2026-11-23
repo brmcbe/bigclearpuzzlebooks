@@ -7,6 +7,10 @@
 - [Free large-print sudoku](https://bigclearpuzzlebooks.com/sudoku/): Easy, Medium and Hard, one big puzzle per page with solution
 - [Free monthly puzzle pack by email](https://bigclearpuzzlebooks.com/#signup)
 
+## Guides
+- [What font size is large print?](https://bigclearpuzzlebooks.com/large-print-font-size/): 16, 18 or 21 point explained, with APH and RNIB definitions
+- [Dementia-friendly printables](https://bigclearpuzzlebooks.com/dementia-friendly-printables/): what makes a puzzle easier to see and start, and which free printables to try first
+
 ## For activity directors
 - [Activity directors and memory care](https://bigclearpuzzlebooks.com/activity-directors/): large-print word search and sudoku packs with a facility print license
 
@@ -15,7 +19,7 @@
 - [Amazon paperbacks by Callan Brooks](https://www.amazon.com/s?k=Callan+Brooks+large+print+word+search)
 
 ## Facts
-- Word search: 21 pt bold grid letters, US Letter, one puzzle per page, answer key included
+- Word search: 21 pt bold grid letters, 18 pt word list, 10 to 12 words per puzzle, US Letter, one puzzle per page, answer key included
 - Word directions: right, down, and diagonal down-right only
 - Sudoku: one puzzle per page, a single solution, solvable by logic without guessing
 - Contact: hello@bigclearpuzzlebooks.com
