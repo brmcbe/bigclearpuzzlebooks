@@ -3,7 +3,7 @@
 Usage: python3 tools/build_site.py
 Reads tools/books.json (one free puzzle per book), tools/extras.json (more free puzzles, seasonal, sudoku) and
 tools/wordlists.json (word list for every free word search, copied from the factory themes) and writes every page,
-404.html, _headers, sitemap.xml and robots.txt. Standard library only.
+404.html, _headers, sitemap.xml and robots.txt. Standard library only (share images use Pillow when present).
 To add a free printable: put the PDF in downloads/, a preview JPG in img/, add an entry to books.json or extras.json
 (and its words to wordlists.json for a word search), rebuild.
 
@@ -11,9 +11,12 @@ SEO rules (audit 2026-11-22, ventures repo puzzle-books/marketing/seo-audit-2026
 - root-relative links ("/free/..."), one canonical per page, per-page og:image, og:type article/website (Pinterest rich pins)
 - JSON-LD: site graph (Organization, WebSite, Person Callan Brooks, BookSeries) + page graph (breadcrumbs, document, FAQ)
 - every free page carries unique text: the real word list, puzzle facts, a use tip and an FAQ
+- Pinterest: pinit.js Save button on hover; each free page gets a 1000x1500 (2:3) share image img/share/<slug>.jpg
+  (tools/share_images.py, run at the end like pdf_meta.py) used as og:image and as the Pin image
+- sitemap.xml lists each page's images (Google image sitemap)
 - no health claims (voice.md): "easy to see", never "good for dementia" or "brain health"
 """
-import json, os, datetime, html, subprocess
+import json, os, re, datetime, html, subprocess, importlib.util
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "https://bigclearpuzzlebooks.com"
@@ -128,6 +131,10 @@ for _x in extras:   # newer sudoku pages (growth builder) carry "level" in extra
         SUDOKU_SEO[_x["key"]] = (f"{_lv} Sudoku Large Print #{_n}: Free Printable with Answers", f"{_lv} sudoku large print #{_n}",
                                  f"Free printable {_lv.lower()} sudoku #{_n} in large print: extra-large bold numbers, thick box lines, one puzzle per page, exactly one solution, answer key on page 2.")
 
+PIN_SCRIPT = '<script async defer src="https://assets.pinterest.com/js/pinit.js" data-pin-hover="true" data-pin-tall="true" data-pin-round="true"></script>'
+HAVE_PIL = importlib.util.find_spec("PIL") is not None
+SHARE = []      # share images to render: {out, src, pdf, title, sudoku}
+IMGS = {}       # page URL -> [(img src, alt)] for the image sitemap
 ML_SCRIPT = """<script>(function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[]).push(arguments);},l=d.createElement(e),l.async=1,l.src=u,n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})(window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');ml('account','2817294');</script>"""
 CSS = """*{box-sizing:border-box}body{margin:0;font-family:Verdana,Geneva,'DejaVu Sans',sans-serif;font-size:20px;line-height:1.6;color:#1b1b1b;background:#faf7f0}
 a{color:#1f3a5f}header{background:#1f3a5f;color:#fff}header .w{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 20px}
@@ -175,6 +182,17 @@ def crumbs_html(items):
 def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(765, 990), img_alt="Large print puzzle page",
          og_type="article", graph=None, crumbs=None, noindex=False):
     canonical = BASE + "/" + path
+    pin_attr = ""
+    if path.startswith("free/") and image.endswith("-preview.jpg") and not noindex:   # free printable: 2:3 share image for Pinterest/og
+        slug = path.strip("/").split("/")[-1]; share = f"/img/share/{slug}.jpg"
+        if os.path.exists(ROOT + share) or HAVE_PIL:
+            m = re.search(r"<h1>(.*?)</h1>", body, re.S); pdf = re.search(r'/downloads/([^"#?]+\.pdf)', body)
+            h1 = html.unescape(re.sub("<[^>]+>", "", m.group(1))) if m else title
+            SHARE.append({"out": share.lstrip("/"), "src": image.lstrip("/"), "pdf": ("downloads/" + pdf.group(1)) if pdf else "", "title": h1,
+                          "sudoku": "sudoku" in path})
+            pin_attr = f' data-pin-media="{BASE}{share}" data-pin-description="{E(h1)}. Printable PDF with answer key from Big Clear Puzzle Books."'
+            body = body.replace(f'<img src="{image}"', f'<img src="{image}"{pin_attr}', 1)
+            image, img_wh = share, (1000, 1500)
     nodes = list(graph or []) + ([crumbs_ld(crumbs)] if crumbs else [])
     page_ld = ld({"@context": "https://schema.org", "@graph": nodes}) if nodes else ""
     robots = '<meta name="robots" content="noindex">' if noindex else f'<link rel="canonical" href="{canonical}">'
@@ -186,8 +204,8 @@ def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(76
 <meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{canonical}">
 <meta property="og:image" content="{BASE}{image}"><meta property="og:image:width" content="{img_wh[0]}"><meta property="og:image:height" content="{img_wh[1]}"><meta property="og:image:alt" content="{E(img_alt)}">
 <meta name="twitter:card" content="summary_large_image"><meta name="p:domain_verify" content="5f2e6b6f365deaad7f1cde96575db747"/>
-{ld(SITE_LD)}{page_ld}{ML_SCRIPT}<style>{CSS}</style></head><body>
-<header><div class="w"><img src="/img/icon.png" alt=""><a href="/">Big Clear Puzzle Books</a>
+{ld(SITE_LD)}{page_ld}{ML_SCRIPT}{PIN_SCRIPT}<style>{CSS}</style></head><body>
+<header><div class="w"><img src="/img/icon.png" alt="" data-pin-nopin="true"><a href="/">Big Clear Puzzle Books</a>
 <nav><a href="/word-search/">Word Search</a><a href="/sudoku/">Sudoku</a><a href="/#signup">Free monthly pack</a><a href="/books/">Books</a><a href="/activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
 <main class="w">{crumbs_html(crumbs) if crumbs else ""}{body}</main>
 <footer><div class="w">Big Clear Puzzle Books · Large-print word searches and sudoku that are easy to see and always right.
@@ -198,6 +216,9 @@ Free printables are for personal, family, classroom and activity-group use. Plea
 
 
 def write(rel, text):
+    if rel.endswith("index.html") and 'name="robots" content="noindex"' not in text:
+        u = BASE + "/" + rel[:-len("index.html")]
+        IMGS[u] = list(dict.fromkeys((src, html.unescape(alt)) for src, alt in re.findall(r'<img src="(/img/[^"]+)" alt="([^"]*)"', text) if alt))
     p = os.path.join(ROOT, rel); os.makedirs(os.path.dirname(p) or ROOT, exist_ok=True); open(p, "w").write(text)
 
 
@@ -299,7 +320,7 @@ for k in ORDER:
     qa = faq_ws(len(words) or "the"); faq_html, faq_ld = faq_block(qa)
     mine = [x for x in ws_extras if x["book"] == k]
     body = f"""<h1>{E(h1)}</h1><p class="lead">{E(intro)}</p>
-<div class="two"><div><img src="/img/{k}-preview.jpg" alt="Large print {E(TEXT_NAME[k])} word search \"{E(puzzle)}\" with answer key" width="765" height="990"></div>
+<div class="two"><div><img src="/img/{k}-preview.jpg" alt="Large print {E(TEXT_NAME[k])} word search “{E(puzzle)}” with answer key" width="765" height="990"></div>
 <div><p><a class="btn" href="/downloads/{b['pdf']}" download>Download the free PDF</a></p>
 <ul><li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large letters: 21 pt bold grid, 18 pt word list</li>
 <li>Words read forward, down or diagonally. Nothing backwards</li><li>Answer key on page 2</li><li>Checked by computer: every word is there exactly once</li></ul>
@@ -645,11 +666,22 @@ def lastmod(u):
     return d or TODAY
 
 
-write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-      "".join(f"<url><loc>{u}</loc><lastmod>{lastmod(u)}</lastmod></url>\n" for u in urls) + "</urlset>\n")
+def img_xml(u):
+    return "".join(f"<image:image><image:loc>{BASE}{E(src)}</image:loc></image:image>" for src, alt in IMGS.get(u, [])[:20])
+
+
+write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+      'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' +
+      "".join(f"<url><loc>{u}</loc><lastmod>{lastmod(u)}</lastmod>{img_xml(u)}</url>\n" for u in urls) + "</urlset>\n")
 write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
 write(".nojekyll", "")
 print("pages:", len(urls))
+try:   # 2:3 Pinterest/og share images for free pages (needs Pillow; skipped quietly without it)
+    if SHARE:
+        r = subprocess.run(["python3", os.path.join(ROOT, "tools", "share_images.py")], input=json.dumps(SHARE), text=True, check=True, capture_output=True)
+        print("share images:", r.stdout.strip())
+except Exception as e:
+    print("share images skipped:", e)
 try:   # PDF title/author/links (idempotent): keeps new free PDFs search-friendly without a separate step
     subprocess.run(["python3", os.path.join(ROOT, "tools", "pdf_meta.py")], check=True, capture_output=True)
     print("pdf metadata: ok")
