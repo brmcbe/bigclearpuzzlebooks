@@ -421,5 +421,32 @@
   "TOP TEN",
   "REQUEST",
   "CROONER"
+ ],
+ "extra-easy-1": [
+  "CAT",
+  "DOG",
+  "FISH",
+  "BIRD",
+  "PUPPY",
+  "KITTEN",
+  "BUNNY"
+ ],
+ "extra-easy-2": [
+  "APPLE",
+  "PEAR",
+  "PLUM",
+  "GRAPE",
+  "LEMON",
+  "BANANA",
+  "CHERRY"
+ ],
+ "extra-easy-17": [
+  "TREE",
+  "STAR",
+  "GIFT",
+  "SANTA",
+  "BELLS",
+  "ANGEL",
+  "SNOWMAN"
  ]
 }

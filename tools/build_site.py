@@ -58,9 +58,10 @@ TODAY = datetime.date.today().isoformat()
 E = html.escape
 
 # ---------- names ----------
-TITLE_NAME = {"christmas": "Christmas", "winter": "Winter", "bible": "Bible", "hymns": "Hymn", "nostalgia": "1950s & 60s",
+EE_LISTING = None          # Etsy listing id for the Extra Easy book once Brad publishes it; until then buttons go to the shop
+TITLE_NAME = {"extra": "Extra Easy", "christmas": "Christmas", "winter": "Winter", "bible": "Bible", "hymns": "Hymn", "nostalgia": "1950s & 60s",
               "garden": "Garden", "cooking": "Cooking", "thanksgiving": "Thanksgiving", "fall": "Fall Harvest"}
-TEXT_NAME = {"christmas": "Christmas", "winter": "winter", "bible": "Bible", "hymns": "hymn", "nostalgia": "1950s and 60s",
+TEXT_NAME = {"extra": "extra easy", "christmas": "Christmas", "winter": "winter", "bible": "Bible", "hymns": "hymn", "nostalgia": "1950s and 60s",
              "garden": "garden", "cooking": "cooking", "thanksgiving": "Thanksgiving", "fall": "fall harvest"}
 USE_TIP = {
     "christmas": "Print a stack for a holiday party, a December activity hour or a card to tuck in with a gift for Grandma.",
@@ -233,10 +234,12 @@ def faq_block(qa):
             {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in qa]})
 
 
-def words_block(words):
+def words_block(words, extra_easy=False):
     if not words: return ""
+    facts = ("10 x 10 grid · giant 34 pt letters · words read only across or down, never diagonal or backwards" if extra_easy
+             else "14 x 14 grid · words read right, down or diagonally down-right, never backwards")
     return (f'<h2>Words to find</h2><ul class="words">{"".join(f"<li>☐ {E(w)}</li>" for w in sorted(words))}</ul>'
-            f'<p class="facts">{len(words)} words · 14 x 14 grid · words read right, down or diagonally down-right, never backwards</p>')
+            f'<p class="facts">{len(words)} words · {facts}</p>')
 
 
 def doc_ld(name, url, image, pdf, keywords, series=True):
@@ -257,6 +260,7 @@ def card(k, up="/"):
 
 
 def theme_of(x):
+    if x.get("extra_easy"): return "extra"
     if x.get("seasonal"): return "fall" if "harvest" in x["slug"] else "thanksgiving"
     return x["book"]
 
@@ -267,16 +271,17 @@ def xalt(x):
 
 
 def xcard(x, up="/"):
-    label = "Sudoku" if x.get("sudoku") else ("Thanksgiving" if x.get("seasonal") else books[x["book"]]["name"])
+    label = "Sudoku" if x.get("sudoku") else ("Extra Easy" if x.get("extra_easy") else ("Thanksgiving" if x.get("seasonal") else books[x["book"]]["name"]))
     return (f'<div class="card"><a href="/free/{x["slug"]}/"><img src="/img/{x["key"]}-preview.jpg" alt="{E(xalt(x))}" '
             f'loading="lazy" width="765" height="990"></a><h3><a href="/free/{x["slug"]}/">{E(x["puzzle_title"])}</a></h3>'
             f'<p>{label} · free PDF</p></div>')
 
 
-ws_extras = [x for x in extras if not x.get("seasonal") and not x.get("sudoku")]
+ws_extras = [x for x in extras if not x.get("seasonal") and not x.get("sudoku") and not x.get("extra_easy")]
+ee_extras = [x for x in extras if x.get("extra_easy")]
 sd_extras = [x for x in extras if x.get("sudoku")]
 seasonal = [x for x in extras if x.get("seasonal")]
-WS_N = len(ORDER) + len(ws_extras)        # free word search pages (seasonal pages not counted)
+WS_N = len(ORDER) + len(ws_extras) + len(ee_extras)        # free word search pages (seasonal pages not counted)
 
 # ---------- base free pages (puzzle 1 of each book) ----------
 for k in ORDER:
@@ -322,6 +327,22 @@ for x in extras:
         crumbs = [("Home", "/"), ("Sudoku", "/sudoku/"), (x["puzzle_title"], None)]
         doc = doc_ld(h1[0].upper() + h1[1:], url, f"/img/{x['key']}-preview.jpg", x["pdf"], f"large print sudoku, {lv.lower()} sudoku printable, sudoku for seniors, answer key", series=False)
         more_title = "More free large-print sudoku"
+    elif x.get("extra_easy"):
+        words = WORDS.get(x["key"], []); p = x["puzzle_title"]
+        title = f"Extra Easy Large Print Word Search: {p} (Free PDF)"
+        h1 = f"{p}: free extra easy large-print word search"
+        meta = f'Free extra easy "{p}" word search with giant 34 pt letters: a 10 x 10 grid, {len(words) or 7} short words, across or down only, answer key included.'
+        href = f"{SHOP}/listing/{EE_LISTING}" if EE_LISTING else SHOP
+        more = (f'<div class="box"><b>Want more?</b> The <b>Extra Easy</b> book has 50 puzzles like this one, giant letters, one per page, with every answer.'
+                f'<br><a class="btn alt" href="{href}">Get all 50 Extra Easy puzzles (printable PDF)</a></div>')
+        bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Giant letters: 34 pt bold grid, 26 pt word list</li><li>Small 10 x 10 grid with 6 to 8 short words</li><li>Words read only across or down. Never diagonal, never backwards</li><li>Answer key on page 2</li>"
+        detail = words_block(words, extra_easy=True) + "<p>Good for anyone who finds regular word searches too busy: memory care groups, low vision, or a gentle start. See our guide to <a href=\"/dementia-friendly-printables/\">dementia-friendly printables</a>.</p>"
+        qa = faq_ws(len(words) or "the"); qa[1] = ("How big is the print?", "Grid letters are 34 point bold and the word list is 26 point, on a small 10 x 10 grid, one puzzle per US Letter page.")
+        sib = [y for y in ee_extras if y is not x]
+        grid = "".join(xcard(y) for y in sib) + "".join(card(o) for o in ["nostalgia", "hymns", "christmas"])
+        crumbs = [("Home", "/"), ("Word Search", "/word-search/"), ("Extra Easy", "/word-search/#extra-easy"), (p, None)]
+        doc = doc_ld(h1[0].upper() + h1[1:], url, f"/img/{x['key']}-preview.jpg", x["pdf"], "extra easy word search, giant print word search, large print, seniors, memory care, answer key", series=False)
+        more_title = "More free large-print puzzles"
     else:
         th = theme_of(x); T, t = TITLE_NAME[th], TEXT_NAME[th]; words = WORDS.get(x["key"], []); p = x["puzzle_title"]
         title = EXTRA_TITLE.get(x["key"], f"{p} Word Search, Large Print {T} (Free PDF)")
@@ -402,9 +423,13 @@ hub_qa = [("Are these word searches really free?", "Yes. Each free page has a on
           ("What makes them large print?", "Grid letters are 21 point bold and word lists are 18 point, one puzzle per page. Words never run backwards."),
           ("Who are they for?", "Seniors, adults who like a relaxing puzzle, memory care and assisted living groups, church groups and classrooms.")]
 faq_html, faq_ld = faq_block(hub_qa)
+if ee_extras:
+    sections = (f'<h2 id="extra-easy">Extra Easy (giant print)</h2><p>Small 10 x 10 grids, 6 to 8 short words, giant 34 pt letters, and words that only read across or down.</p>'
+                f'<div class="grid">{"".join(xcard(x) for x in ee_extras)}</div>') + sections
+    ws_links += [f"/free/{x['slug']}/" for x in ee_extras]
 body = f"""<h1>Free large-print word search printables for seniors and adults</h1>
 <p class="lead">7 themed books, 50 puzzles each, one puzzle per page with extra-large letters. Print free puzzles from every book: {WS_N} free PDFs, each with the answer key.</p>
-<p class="jump">{" · ".join(f'<a href="#{k}">{E(books[k]["name"])}</a>' for k in ORDER)} · <a href="/#thanksgiving">Thanksgiving</a></p>
+<p class="jump">{'<a href="#extra-easy">Extra Easy</a> · ' if ee_extras else ""}{" · ".join(f'<a href="#{k}">{E(books[k]["name"])}</a>' for k in ORDER)} · <a href="/#thanksgiving">Thanksgiving</a></p>
 {sections}{faq_html}{signup()}"""
 write(path + "index.html", page(path, "Free Large Print Word Search Printables for Seniors & Adults",
       f"Browse {WS_N} free large-print word searches: Christmas, winter, Bible, hymns, 1950s, garden and cooking. One puzzle per page, answer key included. Printable PDF.",
@@ -478,7 +503,9 @@ body = f"""<h1>Dementia-friendly printable activities: large-print puzzles</h1>
 <li><b>Short word lists.</b> 10 to 12 words per puzzle.</li>
 <li><b>Familiar themes.</b> Hymns, Bible stories, Christmas, gardens, kitchens and the 1950s spark conversation.</li>
 <li><b>Answer key on page 2.</b> Helpers can give a hint without guessing.</li></ul>
-<h2>Good free printables to start with</h2><div class="grid">{"".join(card(k) for k in starts)}{xcard(sd_extras[0])}</div>
+<h2>Start with Extra Easy</h2><p>Our Extra Easy puzzles use a small 10 x 10 grid, just 6 to 8 short words, giant 34 pt letters, and words that only read across or down.</p>
+<div class="grid">{"".join(xcard(x) for x in ee_extras)}</div>
+<h2>More free printables to try</h2><div class="grid">{"".join(card(k) for k in starts)}{xcard(sd_extras[0])}</div>
 <h2>Tips for a group session</h2><ul>
 <li>Print one copy per person, plus one enlarged copy for the table to work on together.</li>
 <li>Read the word list aloud first and talk about each word: who remembers a sock hop, a soda fountain or a favorite hymn?</li>

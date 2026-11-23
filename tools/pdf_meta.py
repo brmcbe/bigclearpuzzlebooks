@@ -35,7 +35,11 @@ for k, b in books.items():
                   f"large print word search, {lc(NAME[k])} word search, seniors, printable, answer key", f"{SHOP}/listing/{b['listing']}", SERIES))
 for x in extras:
     url = f"{BASE}/free/{x['slug']}/"
-    if x.get("sudoku"):
+    if x.get("extra_easy"):
+        items.append((x["pdf"], url, f"Free Extra Easy Large Print Word Search: {x['puzzle_title']} | Big Clear Puzzle Books",
+                      "Extra easy large print word search for seniors and memory care: 10 x 10 grid, giant 34 pt letters, across or down only, answer key",
+                      "extra easy word search, giant print word search, large print, seniors, memory care, printable, answer key", SHOP, SERIES))
+    elif x.get("sudoku"):
         lv = LEVEL[x["key"]]
         items.append((x["pdf"], url, f"Free Large Print {lv} Sudoku: {x['puzzle_title']} | Big Clear Puzzle Books",
                       f"Large print {lv.lower()} sudoku for seniors and adults: big bold numbers, one puzzle per page, answer key",

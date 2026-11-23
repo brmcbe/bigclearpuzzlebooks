@@ -307,5 +307,41 @@
   "title": "Free Printable Large Print 1950s & 60s Word Search: Rock and Roll Days",
   "h1": "Free large-print 1950s & 60s word search: Rock and Roll Days",
   "intro": "A \"Rock and Roll Days\" word search that sparks memories: a large-print reminiscence activity for seniors and memory care. One puzzle per page with the solution."
+ },
+ {
+  "key": "extra-easy-1",
+  "book": null,
+  "slug": "extra-easy-word-search-pets",
+  "puzzle_title": "Pets",
+  "pdf": "free-extra-easy-word-search-1.pdf",
+  "extra_easy": true,
+  "theme": "extra-easy-1",
+  "title": "",
+  "h1": "",
+  "intro": "An extra easy \"Pets\" word search with giant letters: a small 10 x 10 grid, 7 short words, and words that only read across or down."
+ },
+ {
+  "key": "extra-easy-2",
+  "book": null,
+  "slug": "extra-easy-word-search-fruit",
+  "puzzle_title": "Fruit",
+  "pdf": "free-extra-easy-word-search-2.pdf",
+  "extra_easy": true,
+  "theme": "extra-easy-1",
+  "title": "",
+  "h1": "",
+  "intro": "An extra easy \"Fruit\" word search with giant letters: a small 10 x 10 grid, 7 short words, and words that only read across or down."
+ },
+ {
+  "key": "extra-easy-17",
+  "book": null,
+  "slug": "extra-easy-word-search-christmas",
+  "puzzle_title": "Christmas",
+  "pdf": "free-extra-easy-word-search-17.pdf",
+  "extra_easy": true,
+  "theme": "extra-easy-1",
+  "title": "",
+  "h1": "",
+  "intro": "An extra easy \"Christmas\" word search with giant letters: a small 10 x 10 grid, 7 short words, and words that only read across or down."
  }
 ]
