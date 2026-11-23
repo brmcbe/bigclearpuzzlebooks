@@ -158,7 +158,7 @@ def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(76
 <nav><a href="/word-search/">Word Search</a><a href="/sudoku/">Sudoku</a><a href="/#signup">Free monthly pack</a><a href="/activity-directors/">Activity directors</a><a href="{SHOP}">Shop</a></nav></div></header>
 <main class="w">{crumbs_html(crumbs) if crumbs else ""}{body}</main>
 <footer><div class="w">Big Clear Puzzle Books · Large-print word searches and sudoku that are easy to see and always right.
-· <a href="{SHOP}">Etsy shop</a> · <a href="{AMAZON_SERIES}">Paperbacks by Callan Brooks on Amazon</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a> · <a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a><br>
+· <a href="{SHOP}">Etsy shop</a> · <a href="{AMAZON_AUTHOR}">Paperbacks by Callan Brooks on Amazon</a> · <a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a> · <a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a><br>
 Guides: <a href="/dementia-friendly-printables/">Dementia-friendly printables</a> · <a href="/large-print-font-size/">What font size is large print?</a> · <a href="/activity-directors/">For activity directors</a><br>
 Free printables are for personal, family, classroom and activity-group use. Please share the link, not the file.</div></footer>
 </body></html>"""
