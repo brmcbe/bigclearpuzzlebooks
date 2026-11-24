@@ -113,11 +113,11 @@ SUDOKU_SEO = {  # key: title tag, h1, meta (each level page aims at a different 
     "sudoku-medium": ("Medium Sudoku Printable, Large Print for Seniors (Free PDF)", "Free large-print medium sudoku",
                       "Free printable medium sudoku in large print: a few more logic steps than easy, never guessing. Big numbers, one per page, answer key included."),
     "sudoku-medium-2": ("Medium Sudoku Large Print #2: Free Printable with Answers", "Medium sudoku large print #2",
-                        "Another free medium sudoku with extra-large numbers and thick box lines. One puzzle per page, exactly one solution, answer key on page 2."),
+                        "Another free medium sudoku with extra-large numbers and thick box lines. One puzzle per page, answer key on page 2."),
     "sudoku-hard": ("Hard Sudoku Printable, Large Print for Adults (Free PDF)", "Free large-print hard sudoku",
-                    "Free printable hard sudoku in large print for experienced solvers: big bold numbers, one puzzle per page, exactly one solution, answer key included."),
+                    "Free printable hard sudoku in large print for experienced solvers: big bold numbers, one puzzle per page, answer key included."),
     "sudoku-hard-2": ("Hard Sudoku Large Print #2: Free Printable with Answers", "Hard sudoku large print #2",
-                      "A second free hard sudoku with extra-large numbers for experienced solvers. One puzzle per page, exactly one solution, answer key on page 2."),
+                      "A second free hard sudoku with extra-large numbers for experienced solvers. One puzzle per page, answer key on page 2."),
 }
 EXTRA_TITLE = {  # title-tag overrides where the pattern runs long or repeats itself
     "thanksgiving-1": "Free Large Print Thanksgiving Word Search for Seniors (PDF)",
@@ -132,7 +132,7 @@ for _x in extras:   # newer sudoku pages (growth builder) carry "level" in extra
     if _x.get("sudoku") and _x["key"] not in LEVEL:
         _lv = _x["level"]; _n = _x["puzzle_title"].split()[-1]; LEVEL[_x["key"]] = _lv
         SUDOKU_SEO[_x["key"]] = (f"{_lv} Sudoku Large Print #{_n}: Free Printable with Answers", f"{_lv} sudoku large print #{_n}",
-                                 f"Free printable {_lv.lower()} sudoku #{_n} in large print: extra-large bold numbers, thick box lines, one puzzle per page, exactly one solution, answer key on page 2.")
+                                 f"Free printable {_lv.lower()} sudoku #{_n} in large print: extra-large bold numbers, thick box lines, one puzzle per page, answer key on page 2.")
 
 PIN_SCRIPT = '<script async defer src="https://assets.pinterest.com/js/pinit.js" data-pin-hover="true" data-pin-tall="true" data-pin-round="true"></script>'
 HAVE_PIL = importlib.util.find_spec("PIL") is not None
@@ -349,7 +349,7 @@ def nav_html(path, crumbs):
 def footer_html():
     return f"""<footer class="site"><div class="w ft">
 <div class="ft-about"><p class="ft-brand"><img src="/img/icon.png" alt="" width="56" height="56" data-pin-nopin="true"><b>Big Clear Puzzle Books</b></p>
-<p>Large-print word searches and sudoku that are easy to see and always right.</p></div>
+<p>Large-print word searches and sudoku that are easy to see and fun to solve.</p></div>
 <div><p class="ft-h">Shop &amp; follow</p><ul><li><a href="{SHOP}">Etsy shop</a></li><li><a href="{AMAZON_AUTHOR}">Paperbacks by Callan Brooks on Amazon</a></li>
 <li><a href="https://www.pinterest.com/bigclearpuzzlebooks/">Pinterest</a></li><li><a href="mailto:hello@bigclearpuzzlebooks.com">hello@bigclearpuzzlebooks.com</a></li></ul></div>
 <div><p class="ft-h">Guides</p><ul><li><a href="/books/">All our books</a></li><li><a href="/dementia-friendly-printables/">Dementia-friendly printables</a></li>
@@ -365,7 +365,7 @@ def shell_top(path, crumbs):
     main, util = nav_html(path, crumbs)
     return (f'<a class="skip" href="#main">Skip to main content</a><div class="topbar"><div class="w">{TSIZE}{util}</div></div>'
             f'<header class="site-h"><div class="w"><a class="brand" href="/"><img src="/img/icon.png" alt="" data-pin-nopin="true" width="66" height="66">'
-            f'<span><b>Big Clear Puzzle Books</b><small>Easy to see and always right</small></span></a>{main}</div></header>')
+            f'<span><b>Big Clear Puzzle Books</b><small>Easy to see, fun to solve</small></span></a>{main}</div></header>')
 
 
 def page(path, title, desc, body, image="/img/christmas-preview.jpg", img_wh=(765, 990), img_alt="Large print puzzle page",
@@ -423,7 +423,7 @@ def faq_ws(words_n):
           ("How big is the print?",
            "Grid letters are 21 point bold and the word list is 18 point, one puzzle on a US Letter page (it prints on A4 too)."),
           ("Is there an answer key?",
-           f"Yes. The solution is on page 2, and a computer checked that all {words_n} words appear exactly once."),
+           f"Yes. The solution is on page 2, with all {words_n} words marked in the grid."),
           ("Can I copy it for residents in senior living or memory care?",
            "Yes, for your group. For a whole facility's activity calendar, the Activity Director Pack has 350 puzzles and a facility print license.")]
     return qa
@@ -433,11 +433,11 @@ def faq_sd(level):
     qa = [("Is this large-print sudoku really free?",
            "Yes. Download the PDF and print as many copies as you need for your family, class or activity group."),
           ("How big are the numbers?", "The numbers are extra-large and bold (38 point), with thick lines around each 3 x 3 box, one puzzle per page."),
-          ("Is there an answer key?", "Yes, on page 2. A computer checked that the puzzle has exactly one solution."),
+          ("Is there an answer key?", "Yes. The full solution is on page 2."),
           (f"How hard is a {level.lower()} puzzle?",
            {"Easy": "Every square can be found with simple logic, so it suits beginners and relaxed solving. No guessing is ever needed.",
             "Medium": "It takes a few more logic steps than easy, but never guessing. A good next step after the easy puzzles.",
-            "Hard": "It needs longer chains of logic and suits experienced solvers. It still has exactly one solution and never needs guessing."}[level])]
+            "Hard": "It needs longer chains of logic and suits experienced solvers. It's a real workout, but it never needs guessing."}[level])]
     return qa
 
 
@@ -530,8 +530,8 @@ for x in extras:
         lv = LEVEL[x["key"]]; title, h1, meta = SUDOKU_SEO[x["key"]]
         more = (f'<div class="box"><b>Want more?</b> Each <b>Large Print Sudoku for Seniors</b> book has 100 puzzles like this one, one per page, '
                 f'with every solution. The series has 7 volumes, from Easy to Hard.<br><a class="btn alt" href="/sudoku/#series">See the 7 sudoku books</a></div>')
-        bullets = "<li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>Difficulty checked by a logic solver</li><li>Puzzle on page 1, solution on page 2</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
-        detail = (f'<h2>About this puzzle</h2><p class="facts">9 x 9 sudoku · {lv} level · exactly one solution · solvable by logic, never guessing</p>'
+        bullets = "<li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>No guessing needed: logic gets you there</li><li>Puzzle on page 1, solution on page 2</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
+        detail = (f'<h2>About this puzzle</h2><p class="facts">9 x 9 sudoku · {lv} level · solvable by logic, no guessing</p>'
                   f'<p>Fill every row, column and 3 x 3 box with the numbers 1 to 9. {"Start with a row or box that is almost full." if lv == "Easy" else "Look for the square with the fewest possible numbers, then work outward."}</p>')
         detail += (f'<div class="box"><b>Stuck?</b> {E(SD_TIP[lv])} '
                    f'<a href="/sudoku/strategies/#{lv.lower()}">See the {lv.lower()} strategies, with pictures</a></div>')
@@ -661,7 +661,7 @@ sd_qa = [("Is the large-print sudoku free?", f"Yes. {len(sd_extras)} free puzzle
 faq_html, faq_ld = faq_block(sd_qa)
 body = f"""<h1>Large-print sudoku for seniors, Easy to Hard</h1>
 <p class="lead">7 books of 100 puzzles each: one puzzle per page, extra-large bold numbers, thick box lines, every solution in the back.
-Each puzzle has exactly one answer, and its level is checked by a logic solver.</p>
+Pick your level, from a gentle warm-up to a real brain workout.</p>
 <h2>Try one free</h2><div class="grid">{"".join(xcard(x) for x in sd_extras)}</div>
 <div class="box"><b>New to sudoku, or stuck on a hard one?</b> Our illustrated guide shows the 8 strategies every puzzle needs, from Easy to Hard.
 <br><a class="btn alt" href="/sudoku/strategies/">Read the sudoku strategies</a></div>
@@ -762,7 +762,7 @@ body = f"""<h1>Large-print puzzles for memory care and activity directors</h1>
 <div class="grid">{"".join(xcard(x) for x in sd_extras[:3])}</div>
 <h2>Why residents can finish them</h2><ul>
 <li>One puzzle per page: 21 pt bold grid letters, 38 pt sudoku numbers</li><li>Word search words only read forward, down or diagonally. Nothing backwards</li>
-<li>Every puzzle checked by computer, and every answer is in the back</li>
+<li>Every answer is in the back, so helpers can give a hint</li>
 <li>Themes people talk about: Christmas, Winter, Bible, Hymns, 1950s & 60s Memories, Garden, Cooking & Baking</li></ul>
 <p>Planning for residents living with dementia? See our guide to <a href="/dementia-friendly-printables/">dementia-friendly printables</a>.</p>
 {signup()}"""
@@ -884,7 +884,7 @@ live = [k for k in ORDER if books[k].get("asin")]
 paperbacks = (f"<h2>Paperbacks on Amazon</h2><p>Prefer a real book? Printed paperbacks by Callan Brooks, 8.5 x 11 in. A good gift. <a href=\"{AMAZON_SERIES}\">See the whole series on Amazon</a> or <a href=\"/books/\">browse all our books</a>.</p><p>"
               + "".join(f'<a class="btn alt" href="https://www.amazon.com/dp/{books[k]["asin"]}">{E(books[k]["name"])}</a>' for k in live)
               + "</p>") if live else ""
-H_LEAD = '<p class="lead">Big, clear word searches and sudoku that are easy to see and always right. Print free samples, then get the full books on Etsy or Amazon.</p>'
+H_LEAD = '<p class="lead">Big, clear word searches and sudoku that are easy to see and fun to solve, for a relaxing break or a good brain workout. Print free samples, then get the full books on Etsy or Amazon.</p>'
 H_TILES = (f'<a class="tile" href="/word-search/"><img src="/img/cover-christmas.jpg" alt="Large print word search books" width="340" height="440">'
            f'<span><b>Word Search</b>7 themed books, 50 puzzles each<br>{WS_N} free printables<em>Browse word searches →</em></span></a>'
            f'<a class="tile" href="/sudoku/"><img src="/img/cover-sudoku-1.jpg" alt="Large print sudoku books" width="340" height="440">'
