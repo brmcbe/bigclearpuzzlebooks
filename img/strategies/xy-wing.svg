@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 548 548" role="img" aria-label="Sudoku grid with an XY-Wing: squares A (3 or 7), B (3 or 9) and C (7 or 9) mean square D cannot be 9"><title>Sudoku grid with an XY-Wing: squares A (3 or 7), B (3 or 9) and C (7 or 9) mean square D cannot be 9</title>
+<rect x="4" y="4" width="540" height="540" fill="#fff"/>
+<text x="82.6" y="101.0" font-family="Verdana,DejaVu Sans,sans-serif" font-size="24.0" fill="#1f1d1a" text-anchor="middle" dominant-baseline="central">3</text>
+<text x="105.4" y="101.0" font-family="Verdana,DejaVu Sans,sans-serif" font-size="24.0" fill="#1f1d1a" text-anchor="middle" dominant-baseline="central">7</text>
+<text x="382.6" y="101.0" font-family="Verdana,DejaVu Sans,sans-serif" font-size="24.0" fill="#1f1d1a" text-anchor="middle" dominant-baseline="central">3</text>
+<text x="405.4" y="101.0" font-family="Verdana,DejaVu Sans,sans-serif" font-size="24.0" fill="#1f1d1a" text-anchor="middle" dominant-baseline="central">9</text>
+<text x="82.6" y="281.0" font-family="Verdana,DejaVu Sans,sans-serif" font-size="24.0" fill="#1f1d1a" text-anchor="middle" dominant-baseline="central">7</text>
+<text x="105.4" y="281.0" font-family="Verdana,DejaVu Sans,sans-serif" font-size="24.0" fill="#1f1d1a" text-anchor="middle" dominant-baseline="central">9</text>
+<text x="382.6" y="281.0" font-family="Verdana,DejaVu Sans,sans-serif" font-size="24.0" fill="#1f1d1a" text-anchor="middle" dominant-baseline="central">2</text>
+<text x="405.4" y="281.0" font-family="Verdana,DejaVu Sans,sans-serif" font-size="24.0" fill="#8a8378" text-anchor="middle" dominant-baseline="central">9</text>
+<line x1="394.6" y1="290.8" x2="416.2" y2="269.2" stroke="#b3261e" stroke-width="3.0" stroke-linecap="round"/>
+<text x="68.8" y="79.6" font-family="Verdana,sans-serif" font-size="14.4" font-weight="bold" fill="#1e3a5f">A</text>
+<text x="368.8" y="79.6" font-family="Verdana,sans-serif" font-size="14.4" font-weight="bold" fill="#1e3a5f">B</text>
+<text x="68.8" y="259.6" font-family="Verdana,sans-serif" font-size="14.4" font-weight="bold" fill="#1e3a5f">C</text>
+<text x="368.8" y="259.6" font-family="Verdana,sans-serif" font-size="14.4" font-weight="bold" fill="#1e3a5f">D</text>
+<line x1="4" y1="4" x2="4" y2="544" stroke="#1f1d1a" stroke-width="4"/>
+<line x1="64" y1="4" x2="64" y2="544" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="124" y1="4" x2="124" y2="544" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="184" y1="4" x2="184" y2="544" stroke="#1f1d1a" stroke-width="4"/>
+<line x1="244" y1="4" x2="244" y2="544" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="304" y1="4" x2="304" y2="544" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="364" y1="4" x2="364" y2="544" stroke="#1f1d1a" stroke-width="4"/>
+<line x1="424" y1="4" x2="424" y2="544" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="484" y1="4" x2="484" y2="544" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="544" y1="4" x2="544" y2="544" stroke="#1f1d1a" stroke-width="4"/>
+<line x1="4" y1="4" x2="544" y2="4" stroke="#1f1d1a" stroke-width="4"/>
+<line x1="4" y1="64" x2="544" y2="64" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="4" y1="124" x2="544" y2="124" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="4" y1="184" x2="544" y2="184" stroke="#1f1d1a" stroke-width="4"/>
+<line x1="4" y1="244" x2="544" y2="244" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="4" y1="304" x2="544" y2="304" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="4" y1="364" x2="544" y2="364" stroke="#1f1d1a" stroke-width="4"/>
+<line x1="4" y1="424" x2="544" y2="424" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="4" y1="484" x2="544" y2="484" stroke="#1f1d1a" stroke-width="1.2"/>
+<line x1="4" y1="544" x2="544" y2="544" stroke="#1f1d1a" stroke-width="4"/>
+<rect x="367.0" y="67.0" width="54.0" height="54.0" fill="none" stroke="#1e3a5f" stroke-width="4.5" rx="4"/>
+<rect x="67.0" y="67.0" width="54.0" height="54.0" fill="none" stroke="#1e3a5f" stroke-width="4.5" rx="4"/>
+<rect x="67.0" y="247.0" width="54.0" height="54.0" fill="none" stroke="#1e3a5f" stroke-width="4.5" rx="4"/>
+</svg>

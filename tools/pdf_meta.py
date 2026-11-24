@@ -77,8 +77,15 @@ for pdf, url, title, subject, keywords, etsy, amazon in items:
             links.append((x0, y0, x1, y1, etsy))
         elif t == "bigclearpuzzlebooks.com":
             links.append((x0, y0, x1, y1, f"{BASE}/#signup" if y0 < H - 120 else url))
+    for x0, y0, x1, y1, t in ws:
+        if t.startswith("bigclearpuzzlebooks.com/sudoku/strategies"): links.append((x0, y0, x1, y1, f"{BASE}/sudoku/strategies/"))
     for x0, y0, x1, y1, href in links:
         w.add_annotation(page_number=n - 1, annotation=Link(rect=(x0 - 2, H - y1 - 2, x1 + 2, H - y0 + 2), url=href))
+    first = w.pages[0]                         # sudoku puzzle page: "Free strategy guide: ..." line under the grid
+    if "/Annots" in first: del first[NameObject("/Annots")]
+    for x0, y0, x1, y1, t in words(path, 1):
+        if t.startswith("bigclearpuzzlebooks.com/sudoku/strategies"):
+            w.add_annotation(page_number=0, annotation=Link(rect=(x0 - 2, H - y1 - 2, x1 + 2, H - y0 + 2), url=f"{BASE}/sudoku/strategies/"))
     w.add_metadata({"/Title": title, "/Author": "Big Clear Puzzle Books", "/Subject": subject, "/Keywords": keywords, "/Creator": "Big Clear Puzzle Books"})
     tmp = path + ".tmp"; w.write(tmp); os.replace(tmp, path); done += 1
     print(f"{pdf}: {len(links)} links")

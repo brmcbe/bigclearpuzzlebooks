@@ -124,6 +124,9 @@ EXTRA_TITLE = {  # title-tag overrides where the pattern runs long or repeats it
     "thanksgiving-3": "Free Large Print Fall Harvest Word Search for Seniors (PDF)",
     "nostalgia-3": "Drive-In Movie Night Word Search, Large Print 1950s (Free PDF)",
 }
+SD_TIP = {"Easy": "Pick a number and check each box: if only one square in a box can hold it, write it in.",
+          "Medium": "Pencil in the possible numbers. If two squares in a row can only be the same two numbers, cross those numbers off the rest of the row.",
+          "Hard": "Pencil in every square, then look for pairs, triples, and the X-Wing and XY-Wing patterns."}
 LEVEL = {"sudoku-1": "Easy", "sudoku-easy-2": "Easy", "sudoku-medium": "Medium", "sudoku-medium-2": "Medium", "sudoku-hard": "Hard", "sudoku-hard-2": "Hard"}
 for _x in extras:   # newer sudoku pages (growth builder) carry "level" in extras.json; title/h1/meta follow a pattern
     if _x.get("sudoku") and _x["key"] not in LEVEL:
@@ -202,6 +205,7 @@ img{max-width:100%;height:auto}.w{max-width:1140px;margin:0 auto;padding:0 24px}
 .box h2{margin-top:6px}
 .dlrow{margin:0 0 12px}.dlrow .btn{width:100%;margin:0}
 .ticks{list-style:none;padding:0;margin:8px 0 0}.ticks li{padding-top:10px;padding-bottom:10px;border-top:1px dashed var(--rule)}.ticks li::before{top:12px}
+.strat figure{margin:14px 0 30px;background:#fff;border:1px solid var(--rule);border-radius:14px;padding:16px}.strat figure img{display:block;width:100%;height:auto;max-width:540px;margin:0 auto}.strat figure.row{overflow-x:auto}.strat figure.row img{max-width:780px;min-width:520px}.toc a{margin-right:18px}
 .wl{margin-top:10px}.facts{font-size:1.125rem;color:var(--soft)}
 .words{list-style:none;padding:0;margin:12px 0;display:flex;flex-wrap:wrap;gap:10px 12px;font-size:1.375rem;font-weight:bold;letter-spacing:.04em}
 .words li{background:#fff;border:2px solid var(--rule);border-radius:10px;padding:8px 16px;white-space:nowrap}
@@ -505,7 +509,7 @@ for k in ORDER:
 <div class="getit"><div class="pv"><img src="/img/{k}-preview.jpg" alt="Large print {E(TEXT_NAME[k])} word search “{E(puzzle)}” with answer key" width="765" height="990"></div>
 <div class="act"><p class="dlrow"><a class="btn" href="/downloads/{b['pdf']}" download>Download the free PDF</a></p>
 <ul class="ticks"><li>Extra-large letters: 21 pt bold grid, 18 pt word list</li>
-<li>Words read forward, down or diagonally. Nothing backwards</li><li>2-page PDF: the puzzle, then its solution</li><li>US Letter (8.5 x 11 in), prints on A4 too</li></ul></div></div>
+<li>Words read forward, down or diagonally. Nothing backwards</li><li>Puzzle on page 1, solution on page 2</li><li>US Letter (8.5 x 11 in), prints on A4 too</li></ul></div></div>
 <section class="wl"><h2>{E(puzzle)}: puzzle 1 of the {E(b['name'])} book</h2>{words_block(words)}<p>{E(USE_TIP[k])}</p></section>
 <div class="box"><b>Want more?</b> This puzzle comes from the full <b>{E(b['name'])}</b> book: 50 large-print puzzles, one per page, with every solution.
 <br><a class="btn alt" href="{SHOP}/listing/{b['listing']}">Get all 50 puzzles (printable PDF)</a>{extra}</div>
@@ -526,9 +530,11 @@ for x in extras:
         lv = LEVEL[x["key"]]; title, h1, meta = SUDOKU_SEO[x["key"]]
         more = (f'<div class="box"><b>Want more?</b> Each <b>Large Print Sudoku for Seniors</b> book has 100 puzzles like this one, one per page, '
                 f'with every solution. The series has 7 volumes, from Easy to Hard.<br><a class="btn alt" href="/sudoku/#series">See the 7 sudoku books</a></div>')
-        bullets = "<li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>Difficulty checked by a logic solver</li><li>2-page PDF: the puzzle, then its solution</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
+        bullets = "<li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>Difficulty checked by a logic solver</li><li>Puzzle on page 1, solution on page 2</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
         detail = (f'<h2>About this puzzle</h2><p class="facts">9 x 9 sudoku · {lv} level · exactly one solution · solvable by logic, never guessing</p>'
                   f'<p>Fill every row, column and 3 x 3 box with the numbers 1 to 9. {"Start with a row or box that is almost full." if lv == "Easy" else "Look for the square with the fewest possible numbers, then work outward."}</p>')
+        detail += (f'<div class="box"><b>Stuck?</b> {E(SD_TIP[lv])} '
+                   f'<a href="/sudoku/strategies/#{lv.lower()}">See the {lv.lower()} strategies, with pictures</a></div>')
         qa = faq_sd(lv); sib = [y for y in sd_extras if y is not x]
         grid = "".join(xcard(y) for y in sib)
         crumbs = [("Home", "/"), ("Sudoku", "/sudoku/"), (x["puzzle_title"], None)]
@@ -542,7 +548,7 @@ for x in extras:
         href = f"{SHOP}/listing/{EE_LISTING}" if EE_LISTING else SHOP
         more = (f'<div class="box"><b>Want more?</b> The <b>Extra Easy</b> book has 50 puzzles like this one, giant letters, one per page, with every answer.'
                 f'<br><a class="btn alt" href="{href}">Get all 50 Extra Easy puzzles (printable PDF)</a></div>')
-        bullets = "<li>Giant letters: 34 pt bold grid, 26 pt word list</li><li>Small 10 x 10 grid with 6 to 8 short words</li><li>Words read only across or down. Never diagonal, never backwards</li><li>2-page PDF: the puzzle, then its solution</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
+        bullets = "<li>Giant letters: 34 pt bold grid, 26 pt word list</li><li>Small 10 x 10 grid with 6 to 8 short words</li><li>Words read only across or down. Never diagonal, never backwards</li><li>Puzzle on page 1, solution on page 2</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
         detail = words_block(words, extra_easy=True) + "<p>Good for anyone who finds regular word searches too busy: memory care groups, low vision, or a gentle start. See our guide to <a href=\"/dementia-friendly-printables/\">dementia-friendly printables</a>.</p>"
         qa = faq_ws(len(words) or "the"); qa[1] = ("How big is the print?", "Grid letters are 34 point bold and the word list is 26 point, on a small 10 x 10 grid, one puzzle per US Letter page.")
         sib = [y for y in ee_extras if y is not x]
@@ -560,7 +566,7 @@ for x in extras:
         more = f'<div class="box"><b>Want more?</b> {lead}<br><a class="btn alt" href="{SHOP}/listing/{b["listing"]}">Get all 50 puzzles (printable PDF)</a>'
         if b.get("asin"): more += f'<a class="btn alt" href="https://www.amazon.com/dp/{b["asin"]}">Paperback on Amazon</a>'
         more += "</div>"
-        bullets = "<li>Extra-large letters: 21 pt bold grid, 18 pt word list</li><li>Words read forward, down or diagonally. Nothing backwards</li><li>2-page PDF: the puzzle, then its solution</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
+        bullets = "<li>Extra-large letters: 21 pt bold grid, 18 pt word list</li><li>Words read forward, down or diagonally. Nothing backwards</li><li>Puzzle on page 1, solution on page 2</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
         detail = words_block(words) + f"<p>{E(USE_TIP[th])}</p>"
         qa = faq_ws(len(words) or "the")
         sib = [y for y in extras if y is not x and not y.get("sudoku") and ((x.get("seasonal") and y.get("seasonal")) or (not x.get("seasonal") and not y.get("seasonal") and y["book"] == k))]
@@ -657,6 +663,8 @@ body = f"""<h1>Large-print sudoku for seniors, Easy to Hard</h1>
 <p class="lead">7 books of 100 puzzles each: one puzzle per page, extra-large bold numbers, thick box lines, every solution in the back.
 Each puzzle has exactly one answer, and its level is checked by a logic solver.</p>
 <h2>Try one free</h2><div class="grid">{"".join(xcard(x) for x in sd_extras)}</div>
+<div class="box"><b>New to sudoku, or stuck on a hard one?</b> Our illustrated guide shows the 8 strategies every puzzle needs, from Easy to Hard.
+<br><a class="btn alt" href="/sudoku/strategies/">Read the sudoku strategies</a></div>
 <h2 id="series">The series</h2><div class="grid">{"".join(sd_card(v, lv, lid) for v, lv, lid in SUDOKU)}</div>
 <div class="box"><b>Which level?</b> Easy: every square can be found by simple logic, great for beginners. Medium: a few more logic steps,
 never guessing. Hard: for experienced solvers. Volumes 3 and 6 move from one level to the next.</div>
@@ -667,6 +675,76 @@ write(path + "index.html", page(path, "Large Print Sudoku for Seniors: Free Prin
       graph=[{"@type": "CollectionPage", "name": "Large-print sudoku for seniors", "url": url},
              item_list("Free large-print sudoku", [f"/free/{x['slug']}/" for x in sd_extras]), faq_ld],
       crumbs=[("Home", "/"), ("Sudoku", None)]))
+
+# ---------- sudoku strategies (illustrated guide; diagrams from the factory's sudoku_strategies.py) ----------
+path = "sudoku/strategies/"; url = BASE + "/" + path; urls.append(url); pdf_pages.append(("large-print-sudoku-solving-strategies.pdf", path))
+ST_ALT = {
+ "only-place": "Sudoku grid: the 5s in rows 2 and 3 and column 2 leave one empty square for 5 in the top-left box",
+ "only-number": "Sudoku grid: the center square's row, column and box hold 1 to 8, so it must be 9",
+ "pointing": "Sudoku grid with pencil marks for 4: the top-left box's 4 must be in the middle row, so 4 is crossed off the rest of that row",
+ "naked-pair": "Sudoku row with pencil marks: two squares can only be 2 or 7, so 2 and 7 are crossed off the other squares",
+ "hidden-pair": "Sudoku row with pencil marks: 3 and 6 fit only in the same two squares, so the other numbers in those squares are crossed off",
+ "naked-triple": "Sudoku row with pencil marks: three squares share only 2, 5 and 8, so those numbers are crossed off the rest of the row",
+ "x-wing": "Sudoku grid with pencil marks for 7 forming a rectangle in rows 2 and 7, so 7 is crossed off the rest of those two columns",
+ "xy-wing": "Sudoku grid with an XY-Wing: squares A (3 or 7), B (3 or 9) and C (7 or 9) mean square D cannot be 9"}
+def fig(k, row=False):
+    return f'<figure{" class=" + chr(34) + "row" + chr(34) if row else ""}><img src="/img/strategies/{k}.svg" alt="{E(ST_ALT[k])}" width="548" height="{68 if row else 548}" loading="lazy" data-pin-nopin="true"></figure>'
+st_qa = [("What is the best strategy for solving sudoku?",
+          "Start with the two simple strategies: look for the only place a number can go in a box, row or column, and for a square where only one number fits. They solve every easy puzzle and find most numbers in harder ones."),
+         ("Do you ever need to guess in sudoku?",
+          "Not in a well-made puzzle. Every puzzle in our books can be solved with the eight strategies on this page, with no guessing."),
+         ("What strategies do hard sudoku puzzles need?",
+          "Pencil marks plus pairs, triples, the X-Wing and the XY-Wing. The XY-Wing is the one most hard puzzles in our books need."),
+         ("What are pencil marks in sudoku?",
+          "Small numbers written in the corner of an empty square to show which numbers could still go there. You cross them off as strategies rule them out.")]
+faq_html, faq_ld = faq_block(st_qa)
+body = f"""<h1>Sudoku strategies: how to solve easy, medium and hard sudoku</h1>
+<p class="lead">Eight solving strategies, each shown on a big, clear example grid. Start with the first two: they solve every easy puzzle.
+Every puzzle in our books can be solved with these eight, with no guessing.</p>
+<div class="box"><b>Print the whole guide.</b> All eight strategies in large print, 7 pages, free.
+<br><a class="btn" href="/downloads/large-print-sudoku-solving-strategies.pdf" download>Download the free strategy guide (PDF)</a></div>
+<p class="toc"><b>Jump to:</b> <a href="#easy">Easy</a><a href="#medium">Medium</a><a href="#hard">Hard</a><a href="#stuck">When you're stuck</a></p>
+<div class="strat">
+<h2 id="easy">Easy puzzles: two strategies</h2>
+<h3>1. Only one place for a number</h3><p>Every box needs a 5. Find the 5s already in the puzzle and follow their rows and columns (shaded).
+They rule out two rows and one column of the top-left box, and the 8 fills another square. Only one square is left, so the 5 goes there.</p>{fig("only-place")}
+<h3>2. Only one number fits</h3><p>Pick an empty square and look at its row, its column and its box (shaded). Together they already hold 1, 2, 3, 4, 5, 6, 7 and 8.
+The only number missing is 9, so 9 goes in that square.</p>{fig("only-number")}
+<h3>Helpful habits</h3><ul><li>Start with the number you see most often in the puzzle.</li><li>Check one number at a time across all nine boxes.</li>
+<li>Use a pencil, and keep an eraser handy.</li><li>Stuck? Switch to a different number or a different box.</li></ul>
+<h2 id="medium">Medium puzzles: pencil marks and pairs</h2>
+<h3>Pencil marks</h3><p>Write the numbers that could go in each empty square in small print in the corner. When a strategy rules a number out, cross it off.
+When only one is left, that's your answer. Fill them in one box at a time, and each time you write in an answer, erase that number from the pencil marks in its row, column and box.</p>
+<h3>3. Naked pair</h3><p>Two squares in this row can only be 2 or 7 (outlined). One will be 2 and the other 7, so no other square in the row can be 2 or 7. Cross them off.</p>{fig("naked-pair", True)}
+<h3>4. Hidden pair</h3><p>In this row, 3 and 6 each fit in only two squares, and they're the same two squares (outlined). Those squares must hold the 3 and the 6,
+so cross off every other number in them.</p>{fig("hidden-pair", True)}
+<h3>5. Pointing pair</h3><p>Pencil marks for 4 are shown. In the top-left box, the 4 in the third column rules out that column, so this box's 4 must go in the middle row,
+in one of the two outlined squares. Either way, the 4 is in that row, so cross 4 off the rest of the row.</p>{fig("pointing")}
+<p>It works the other way too: if, inside one row or column, a number's only spots all sit in the same box, cross that number off the rest of that box.</p>
+<h2 id="hard">Hard puzzles: triples and wings</h2>
+<h3>6. Naked triple</h3><p>Three squares share just three numbers between them: 2, 5 and 8 (outlined). Those three squares will use up the 2, the 5 and the 8,
+so cross 2, 5 and 8 off the rest of the row. It works even when a square shows only two of the three numbers.</p>{fig("naked-triple", True)}
+<p><b>Hidden triple:</b> if three numbers each fit in only the same three squares of a row, column or box, those squares must hold those three numbers. Cross off everything else in them.</p>
+<h3>7. X-Wing</h3><p>Pencil marks for 7 are shown. In the 2nd row and the 7th row, 7 fits in only two squares, and they line up in the same two columns (outlined).
+However the 7s fall, they use up both columns, so cross 7 off everywhere else in those two columns.</p>{fig("x-wing")}
+<p><b>Swordfish:</b> the X-Wing idea with three rows and three columns. You'll rarely need it.</p>
+<h3>8. XY-Wing</h3><p>Square A can only be 3 or 7. If A is 3, then B must be 9. If A is 7, then C must be 9. Either way, B or C is a 9.
+Square D sees both B and C, so D can't be 9. Cross the 9 off D. Most hard puzzles in our books need this one.</p>{fig("xy-wing")}
+<h2 id="stuck">When you're stuck</h2><ul><li>Go back to strategies 1 and 2. They find most numbers, even in hard puzzles.</li>
+<li>Make sure every empty square has up-to-date pencil marks.</li><li>Take a break. Fresh eyes spot the next number.</li>
+<li>Peek at one square in the solution, then carry on.</li></ul>
+</div>
+<h2>Practice with a free puzzle</h2><div class="grid">{"".join(xcard(x) for x in sd_extras)}</div>
+<div class="box"><b>Want 100 at a time?</b> Every <a href="/sudoku/#series">Large Print Sudoku for Seniors</a> book starts with the strategies for its level, and every puzzle in it can be solved with them.</div>
+{faq_html}{signup()}"""
+write(path + "index.html", page(path, "Sudoku Strategies: How to Solve Easy to Hard Sudoku (Large Print)",
+      "Eight sudoku strategies on big, clear example grids: only one place, naked and hidden pairs, X-Wing and XY-Wing. Free large-print printable guide.",
+      body, image="/img/sudoku-strategies-preview.jpg", img_alt="Large print sudoku solving strategies guide, page 1", og_type="article",
+      graph=[{"@type": "Article", "headline": "Sudoku strategies: how to solve easy, medium and hard sudoku", "url": url,
+              "publisher": {"@id": f"{BASE}/#org"}, "dateModified": TODAY, "image": f"{BASE}/img/sudoku-strategies-preview.jpg"},
+             doc_ld("Large print sudoku solving strategies guide", url, "/img/sudoku-strategies-preview.jpg", "large-print-sudoku-solving-strategies.pdf",
+                    "sudoku strategies, how to solve sudoku, large print, seniors", series=False), faq_ld],
+      crumbs=[("Home", "/"), ("Sudoku", "/sudoku/"), ("Strategies", None)]))
 
 # ---------- activity directors ----------
 path = "activity-directors/"; url = BASE + "/" + path; urls.append(url)
@@ -791,7 +869,7 @@ body = f"""<h1>Large print word search books by Callan Brooks</h1>
 words that never run backwards, and every answer in the back. Paperbacks on Amazon, printable PDFs on Etsy.</p>
 <p><a class="btn alt" href="{AMAZON_SERIES}">The whole series on Amazon</a><a class="btn alt" href="{AMAZON_AUTHOR}">Callan Brooks author page</a></p>
 <h2>Word search paperbacks</h2><div class="grid">{"".join(book_card(k) for k in ORDER)}</div>
-<h2>Large print sudoku</h2><p>7 books of 100 puzzles each, Easy to Hard, with extra-large numbers. Available now as printable PDFs; paperbacks are on the way.</p>
+<h2>Large print sudoku</h2><p>7 books of 100 puzzles each, Easy to Hard, with extra-large numbers and <a href="/sudoku/strategies/">illustrated solving strategies</a> at the front. Available now as printable PDFs; paperbacks are on the way.</p>
 <div class="grid">{"".join(sd_card(v, lv, lid) for v, lv, lid in SUDOKU)}</div>
 <div class="box"><b>For a whole facility?</b> The <a href="/activity-directors/">Activity Director Pack</a> has all 7 word search books (350 puzzles) with a facility print license.</div>
 {signup()}"""
