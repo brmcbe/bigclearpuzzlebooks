@@ -504,8 +504,8 @@ for k in ORDER:
     body = f"""<h1>{E(h1)}</h1><p class="lead">{E(intro)}</p>
 <div class="getit"><div class="pv"><img src="/img/{k}-preview.jpg" alt="Large print {E(TEXT_NAME[k])} word search “{E(puzzle)}” with answer key" width="765" height="990"></div>
 <div class="act"><p class="dlrow"><a class="btn" href="/downloads/{b['pdf']}" download>Download the free PDF</a></p>
-<ul class="ticks"><li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large letters: 21 pt bold grid, 18 pt word list</li>
-<li>Words read forward, down or diagonally. Nothing backwards</li><li>Answer key on page 2</li><li>Checked by computer: every word is there exactly once</li></ul></div></div>
+<ul class="ticks"><li>Extra-large letters: 21 pt bold grid, 18 pt word list</li>
+<li>Words read forward, down or diagonally. Nothing backwards</li><li>2-page PDF: the puzzle, then its solution</li><li>US Letter (8.5 x 11 in), prints on A4 too</li></ul></div></div>
 <section class="wl"><h2>{E(puzzle)}: puzzle 1 of the {E(b['name'])} book</h2>{words_block(words)}<p>{E(USE_TIP[k])}</p></section>
 <div class="box"><b>Want more?</b> This puzzle comes from the full <b>{E(b['name'])}</b> book: 50 large-print puzzles, one per page, with every solution.
 <br><a class="btn alt" href="{SHOP}/listing/{b['listing']}">Get all 50 puzzles (printable PDF)</a>{extra}</div>
@@ -526,7 +526,7 @@ for x in extras:
         lv = LEVEL[x["key"]]; title, h1, meta = SUDOKU_SEO[x["key"]]
         more = (f'<div class="box"><b>Want more?</b> Each <b>Large Print Sudoku for Seniors</b> book has 100 puzzles like this one, one per page, '
                 f'with every solution. The series has 7 volumes, from Easy to Hard.<br><a class="btn alt" href="/sudoku/#series">See the 7 sudoku books</a></div>')
-        bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>Difficulty checked by a logic solver</li><li>Answer key on page 2</li><li>Checked by computer: exactly one answer</li>"
+        bullets = "<li>Extra-large bold numbers, thick 3 x 3 box lines</li><li>Difficulty checked by a logic solver</li><li>2-page PDF: the puzzle, then its solution</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
         detail = (f'<h2>About this puzzle</h2><p class="facts">9 x 9 sudoku · {lv} level · exactly one solution · solvable by logic, never guessing</p>'
                   f'<p>Fill every row, column and 3 x 3 box with the numbers 1 to 9. {"Start with a row or box that is almost full." if lv == "Easy" else "Look for the square with the fewest possible numbers, then work outward."}</p>')
         qa = faq_sd(lv); sib = [y for y in sd_extras if y is not x]
@@ -542,7 +542,7 @@ for x in extras:
         href = f"{SHOP}/listing/{EE_LISTING}" if EE_LISTING else SHOP
         more = (f'<div class="box"><b>Want more?</b> The <b>Extra Easy</b> book has 50 puzzles like this one, giant letters, one per page, with every answer.'
                 f'<br><a class="btn alt" href="{href}">Get all 50 Extra Easy puzzles (printable PDF)</a></div>')
-        bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Giant letters: 34 pt bold grid, 26 pt word list</li><li>Small 10 x 10 grid with 6 to 8 short words</li><li>Words read only across or down. Never diagonal, never backwards</li><li>Answer key on page 2</li>"
+        bullets = "<li>Giant letters: 34 pt bold grid, 26 pt word list</li><li>Small 10 x 10 grid with 6 to 8 short words</li><li>Words read only across or down. Never diagonal, never backwards</li><li>2-page PDF: the puzzle, then its solution</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
         detail = words_block(words, extra_easy=True) + "<p>Good for anyone who finds regular word searches too busy: memory care groups, low vision, or a gentle start. See our guide to <a href=\"/dementia-friendly-printables/\">dementia-friendly printables</a>.</p>"
         qa = faq_ws(len(words) or "the"); qa[1] = ("How big is the print?", "Grid letters are 34 point bold and the word list is 26 point, on a small 10 x 10 grid, one puzzle per US Letter page.")
         sib = [y for y in ee_extras if y is not x]
@@ -560,7 +560,7 @@ for x in extras:
         more = f'<div class="box"><b>Want more?</b> {lead}<br><a class="btn alt" href="{SHOP}/listing/{b["listing"]}">Get all 50 puzzles (printable PDF)</a>'
         if b.get("asin"): more += f'<a class="btn alt" href="https://www.amazon.com/dp/{b["asin"]}">Paperback on Amazon</a>'
         more += "</div>"
-        bullets = "<li>US Letter (8.5 x 11 in), prints on A4 too</li><li>Extra-large letters: 21 pt bold grid, 18 pt word list</li><li>Words read forward, down or diagonally. Nothing backwards</li><li>Answer key on page 2</li><li>Checked by computer: every word is there exactly once</li>"
+        bullets = "<li>Extra-large letters: 21 pt bold grid, 18 pt word list</li><li>Words read forward, down or diagonally. Nothing backwards</li><li>2-page PDF: the puzzle, then its solution</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
         detail = words_block(words) + f"<p>{E(USE_TIP[th])}</p>"
         qa = faq_ws(len(words) or "the")
         sib = [y for y in extras if y is not x and not y.get("sudoku") and ((x.get("seasonal") and y.get("seasonal")) or (not x.get("seasonal") and not y.get("seasonal") and y["book"] == k))]
@@ -819,7 +819,7 @@ H_SD = (f'<h2>Free sudoku</h2><div class="grid">{"".join(xcard(x) for x in sd_ex
 H_AD = ('<h2>For activity directors and memory care</h2><p>Facility print license, word search and sudoku: <a href="/activity-directors/">see the activity director page</a>, '
         'or read our guide to <a href="/dementia-friendly-printables/">dementia-friendly printables</a>.</p>')
 H_WHY = ('<h2>What makes them different</h2><ul><li>One puzzle per page with extra-large bold letters and numbers (<a href="/large-print-font-size/">what counts as large print?</a>)</li>'
-         '<li>Word search words read forward, down or diagonally, never backwards</li>\n<li>A computer checks every puzzle, and every answer is in the back</li></ul>')
+         '<li>Word search words read forward, down or diagonally, never backwards</li>\n<li>Solutions included for every word search and sudoku puzzle</li></ul>')
 H_BOOKS = ('<a class="tile" href="/books/"><img src="/img/cover-nostalgia.jpg" alt="" width="340" height="440" data-pin-nopin="true">'
            '<span><b>Books</b>Paperbacks on Amazon, printable PDFs on Etsy.<em>All our books →</em></span></a>')
 body = f"""<section class="hero"><div><h1>Free large-print puzzles for seniors</h1>{H_LEAD}
