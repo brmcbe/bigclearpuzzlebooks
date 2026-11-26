@@ -387,5 +387,49 @@
   "title": "Medium Sudoku Large Print #3: Free Printable with Answers",
   "h1": "Medium sudoku large print #3",
   "intro": "Another free medium sudoku with extra-large numbers and thick box lines. One puzzle per page with the solution."
+ },
+ {
+  "key": "christmas-7",
+  "book": "christmas",
+  "slug": "christmas-cookies-word-search",
+  "puzzle_title": "Christmas Cookies",
+  "pdf": "free-large-print-christmas-7-word-search.pdf",
+  "title": "Free Printable Large Print Christmas Word Search: Christmas Cookies",
+  "h1": "Free large-print Christmas word search: Christmas Cookies",
+  "intro": "A big, easy-to-read \"Christmas Cookies\" word search for seniors, memory care groups and holiday baking days. One puzzle per page with the solution."
+ },
+ {
+  "key": "sudoku-easy-4",
+  "book": null,
+  "slug": "easy-sudoku-large-print-printable-4",
+  "puzzle_title": "Easy Sudoku 4",
+  "pdf": "free-large-print-sudoku-easy-4.pdf",
+  "sudoku": true,
+  "level": "Easy",
+  "title": "Easy Sudoku Large Print #4: Free Printable with Answers",
+  "h1": "Easy sudoku large print #4",
+  "intro": "A fourth easy, big-number sudoku for beginners and seniors: one puzzle per page with the solution."
+ },
+ {
+  "key": "winter-6",
+  "book": "winter",
+  "slug": "winter-soup-weather-word-search",
+  "puzzle_title": "Soup Weather",
+  "pdf": "free-large-print-winter-6-word-search.pdf",
+  "title": "Free Printable Large Print Winter Word Search: Soup Weather",
+  "h1": "Free large-print winter word search: Soup Weather",
+  "intro": "A big, easy-to-read \"Soup Weather\" winter word search for seniors, memory care groups and cozy cold-day activities. One puzzle per page with the solution."
+ },
+ {
+  "key": "sudoku-hard-3",
+  "book": null,
+  "slug": "hard-sudoku-printable-large-print-3",
+  "puzzle_title": "Hard Sudoku 3",
+  "pdf": "free-large-print-sudoku-hard-3.pdf",
+  "sudoku": true,
+  "level": "Hard",
+  "title": "Hard Sudoku Large Print #3: Free Printable with Answers",
+  "h1": "Hard sudoku large print #3",
+  "intro": "A third hard sudoku in extra-large print for experienced solvers: one puzzle per page with the solution."
  }
 ]

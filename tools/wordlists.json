@@ -476,5 +476,33 @@
   "COUPLES",
   "WARMING HUT",
   "BENCH"
+ ],
+ "christmas-7": [
+  "SUGAR",
+  "GINGERBREAD",
+  "SNICKERDOODLE",
+  "SHORTBREAD",
+  "SPRINKLES",
+  "ICING",
+  "SPRITZ",
+  "MOLASSES",
+  "THUMBPRINT",
+  "PIZZELLE",
+  "ROLLING PIN",
+  "CUTTERS"
+ ],
+ "winter-6": [
+  "CHILI",
+  "CHOWDER",
+  "STEW",
+  "MINESTRONE",
+  "NOODLE",
+  "BARLEY",
+  "LENTIL",
+  "TOMATO",
+  "SPLIT PEA",
+  "BROTH",
+  "CRACKERS",
+  "LADLE"
  ]
 }
