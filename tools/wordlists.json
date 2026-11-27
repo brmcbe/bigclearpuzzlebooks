@@ -504,5 +504,47 @@
   "BROTH",
   "CRACKERS",
   "LADLE"
+ ],
+ "new-year-1": [
+  "MIDNIGHT",
+  "COUNTDOWN",
+  "CONFETTI",
+  "FIREWORKS",
+  "NOISEMAKER",
+  "PARTY HAT",
+  "TOAST",
+  "CHEERS",
+  "STREAMERS",
+  "BALLOONS",
+  "CLOCK",
+  "CELEBRATE"
+ ],
+ "new-year-2": [
+  "RESOLUTION",
+  "CALENDAR",
+  "JANUARY",
+  "FRESH START",
+  "AULD LANG SYNE",
+  "HOPE",
+  "GOALS",
+  "BELLS",
+  "WISHES",
+  "FAMILY",
+  "FRIENDS",
+  "TRADITION"
+ ],
+ "new-year-3": [
+  "PARADE",
+  "FOOTBALL",
+  "HOPPIN JOHN",
+  "CABBAGE",
+  "PORK",
+  "BRUNCH",
+  "SNOWFALL",
+  "FIRESIDE",
+  "NAP",
+  "VISITORS",
+  "LEFTOVERS",
+  "QUIET"
  ]
 }

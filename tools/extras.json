@@ -431,5 +431,44 @@
   "title": "Hard Sudoku Large Print #3: Free Printable with Answers",
   "h1": "Hard sudoku large print #3",
   "intro": "A third hard sudoku in extra-large print for experienced solvers: one puzzle per page with the solution."
+ },
+ {
+  "key": "new-year-1",
+  "book": "winter",
+  "slug": "new-years-eve-word-search-for-seniors",
+  "puzzle_title": "New Year's Eve",
+  "pdf": "free-large-print-new-year-1-word-search.pdf",
+  "title": "Free Printable Large Print New Year's Word Search for Seniors: New Year's Eve",
+  "h1": "Free large-print New Year's word search: New Year's Eve",
+  "intro": "A big, easy-to-read \"New Year's Eve\" puzzle for ringing in the new year: family gatherings, senior centers and memory care groups.",
+  "seasonal": true,
+  "season": "newyear",
+  "theme": "new-year-free"
+ },
+ {
+  "key": "new-year-2",
+  "book": "winter",
+  "slug": "new-year-new-beginnings-word-search",
+  "puzzle_title": "New Beginnings",
+  "pdf": "free-large-print-new-year-2-word-search.pdf",
+  "title": "Free Printable Large Print New Year's Word Search for Seniors: New Beginnings",
+  "h1": "Free large-print New Year's word search: New Beginnings",
+  "intro": "A big, easy-to-read \"New Beginnings\" puzzle for ringing in the new year: family gatherings, senior centers and memory care groups.",
+  "seasonal": true,
+  "season": "newyear",
+  "theme": "new-year-free"
+ },
+ {
+  "key": "new-year-3",
+  "book": "winter",
+  "slug": "new-years-day-word-search-for-seniors",
+  "puzzle_title": "New Year's Day",
+  "pdf": "free-large-print-new-year-3-word-search.pdf",
+  "title": "Free Printable Large Print New Year's Word Search for Seniors: New Year's Day",
+  "h1": "Free large-print New Year's word search: New Year's Day",
+  "intro": "A big, easy-to-read \"New Year's Day\" puzzle for ringing in the new year: family gatherings, senior centers and memory care groups.",
+  "seasonal": true,
+  "season": "newyear",
+  "theme": "new-year-free"
  }
 ]

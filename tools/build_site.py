@@ -63,9 +63,9 @@ E = html.escape
 # ---------- names ----------
 EE_LISTING = 4623874467    # Etsy listing for Extra Easy vol. 1 (published by Brad 2026-11-23)
 TITLE_NAME = {"extra": "Extra Easy", "christmas": "Christmas", "winter": "Winter", "bible": "Bible", "hymns": "Hymn", "nostalgia": "1950s & 60s",
-              "garden": "Garden", "cooking": "Cooking", "thanksgiving": "Thanksgiving", "fall": "Fall Harvest"}
+              "garden": "Garden", "cooking": "Cooking", "thanksgiving": "Thanksgiving", "fall": "Fall Harvest", "newyear": "New Year's"}
 TEXT_NAME = {"extra": "extra easy", "christmas": "Christmas", "winter": "winter", "bible": "Bible", "hymns": "hymn", "nostalgia": "1950s and 60s",
-             "garden": "garden", "cooking": "cooking", "thanksgiving": "Thanksgiving", "fall": "fall harvest"}
+             "garden": "garden", "cooking": "cooking", "thanksgiving": "Thanksgiving", "fall": "fall harvest", "newyear": "New Year's"}
 USE_TIP = {
     "christmas": "Print a stack for a holiday party, a December activity hour or a card to tuck in with a gift for Grandma.",
     "winter": "A good snow-day or January activity: quiet, cozy and easy to share at a table.",
@@ -76,6 +76,7 @@ USE_TIP = {
     "cooking": "Ask each person to share a family recipe that uses one of the words.",
     "thanksgiving": "Print a few for the kids' and grandparents' table while the turkey rests.",
     "fall": "A cozy autumn activity for a senior center, memory care group or the family table.",
+    "newyear": "Hand it out at a New Year's party or a January 2 activity hour, then ask everyone to share a favorite New Year's memory or tradition.",
 }
 SEO = {  # slug, title tag, h1, lead, meta description (title tags ~60 chars, metas 140-160)
     "christmas": ("christmas-word-search-for-seniors", "Free Large Print Christmas Word Search for Seniors & Adults (PDF)",
@@ -123,6 +124,9 @@ EXTRA_TITLE = {  # title-tag overrides where the pattern runs long or repeats it
     "thanksgiving-1": "Free Large Print Thanksgiving Word Search for Seniors (PDF)",
     "thanksgiving-3": "Free Large Print Fall Harvest Word Search for Seniors (PDF)",
     "nostalgia-3": "Drive-In Movie Night Word Search, Large Print 1950s (Free PDF)",
+    "new-year-1": "Free Large Print New Year's Eve Word Search for Seniors (PDF)",
+    "new-year-2": "New Beginnings Word Search, Large Print New Year Printable (Free PDF)",
+    "new-year-3": "Free Large Print New Year's Day Word Search for Seniors (PDF)",
 }
 SD_TIP = {"Easy": "Pick a number and check each box: if only one square in a box can hold it, write it in.",
           "Medium": "Pencil in the possible numbers. If two squares in a row can only be the same two numbers, cross those numbers off the rest of the row.",
@@ -473,6 +477,7 @@ def card(k, up="/"):
 
 def theme_of(x):
     if x.get("extra_easy"): return "extra"
+    if x.get("season") == "newyear": return "newyear"
     if x.get("seasonal"): return "fall" if "harvest" in x["slug"] else "thanksgiving"
     return x["book"]
 
@@ -482,8 +487,15 @@ def xalt(x):
     return f"Large print {TEXT_NAME[theme_of(x)]} word search \"{x['puzzle_title']}\" with answer key"
 
 
+SEASON_HUB = {"thanksgiving": ("Thanksgiving", "/word-search/#thanksgiving"), "newyear": ("New Year's", "/word-search/#new-year")}
+
+
+def season_of(x):
+    return x.get("season", "thanksgiving") if x.get("seasonal") else None
+
+
 def xcard(x, up="/"):
-    label = "Sudoku" if x.get("sudoku") else ("Extra Easy" if x.get("extra_easy") else ("Thanksgiving" if x.get("seasonal") else books[x["book"]]["name"]))
+    label = "Sudoku" if x.get("sudoku") else ("Extra Easy" if x.get("extra_easy") else (SEASON_HUB[season_of(x)][0] if x.get("seasonal") else books[x["book"]]["name"]))
     return (f'<div class="card pz"><a href="/free/{x["slug"]}/"><img src="/img/{x["key"]}-preview.jpg" alt="{E(xalt(x))}" '
             f'loading="lazy" width="765" height="990"></a><h3><a href="/free/{x["slug"]}/">{E(x["puzzle_title"])}</a></h3>'
             f'<p>{label} · free PDF</p></div>')
@@ -493,6 +505,8 @@ ws_extras = [x for x in extras if not x.get("seasonal") and not x.get("sudoku") 
 ee_extras = [x for x in extras if x.get("extra_easy")]
 sd_extras = [x for x in extras if x.get("sudoku")]
 seasonal = [x for x in extras if x.get("seasonal")]
+tg_extras = [x for x in seasonal if season_of(x) == "thanksgiving"]
+ny_extras = [x for x in seasonal if season_of(x) == "newyear"]
 WS_N = len(ORDER) + len(ws_extras) + len(ee_extras)        # free word search pages (seasonal pages not counted)
 
 # ---------- base free pages (puzzle 1 of each book) ----------
@@ -561,7 +575,9 @@ for x in extras:
         title = EXTRA_TITLE.get(x["key"], f"{p} Word Search, Large Print {T} (Free PDF)")
         h1 = f"{p}: free large-print {t} word search"
         meta = f'Free "{p}" {t} word search in big 21 pt letters: {len(words) or 10} words, one page, answer key included. For seniors, adults and memory care groups.'
-        b = books[k]; lead = ("Get ready for Christmas next: the full <b>Christmas</b> book has 50 large-print puzzles, one per page, with every solution."
+        b = books[k]; lead = ("Keep the cozy season going: the full <b>Winter</b> book has 50 large-print puzzles, one per page, with every solution."
+                              if season_of(x) == "newyear" else
+                              "Get ready for Christmas next: the full <b>Christmas</b> book has 50 large-print puzzles, one per page, with every solution."
                               if x.get("seasonal") else f"This puzzle comes from the full <b>{E(b['name'])}</b> book: 50 large-print puzzles, one per page, with every solution.")
         more = f'<div class="box"><b>Want more?</b> {lead}<br><a class="btn alt" href="{SHOP}/listing/{b["listing"]}">Get all 50 puzzles (printable PDF)</a>'
         if b.get("asin"): more += f'<a class="btn alt" href="https://www.amazon.com/dp/{b["asin"]}">Paperback on Amazon</a>'
@@ -569,11 +585,11 @@ for x in extras:
         bullets = "<li>Extra-large letters: 21 pt bold grid, 18 pt word list</li><li>Words read forward, down or diagonally. Nothing backwards</li><li>Puzzle on page 1, solution on page 2</li><li>US Letter (8.5 x 11 in), prints on A4 too</li>"
         detail = words_block(words) + f"<p>{E(USE_TIP[th])}</p>"
         qa = faq_ws(len(words) or "the")
-        sib = [y for y in extras if y is not x and not y.get("sudoku") and ((x.get("seasonal") and y.get("seasonal")) or (not x.get("seasonal") and not y.get("seasonal") and y["book"] == k))]
+        sib = [y for y in extras if y is not x and not y.get("sudoku") and ((x.get("seasonal") and season_of(y) == season_of(x)) or (not x.get("seasonal") and not y.get("seasonal") and y["book"] == k))]
         base = [] if x.get("seasonal") else [k]
         others = [o for o in ORDER if o not in base][:max(0, 6 - len(sib) - len(base))]
         grid = "".join(card(o) for o in base) + "".join(xcard(y) for y in sib) + "".join(card(o) for o in others)
-        hub = ("Thanksgiving", "/#thanksgiving") if x.get("seasonal") else (b["name"], f"/word-search/#{k}")
+        hub = SEASON_HUB[season_of(x)] if x.get("seasonal") else (b["name"], f"/word-search/#{k}")
         crumbs = [("Home", "/"), ("Word Search", "/word-search/"), hub, (p, None)]
         doc = doc_ld(h1, url, f"/img/{x['key']}-preview.jpg", x["pdf"], f"large print word search, {t} word search for seniors, printable, answer key")
         more_title = "More free large-print puzzles"
@@ -641,9 +657,16 @@ if ee_extras:
     sections = (f'<h2 id="extra-easy">Extra Easy (giant print)</h2><p>Small 10 x 10 grids, 6 to 8 short words, giant 34 pt letters, and words that only read across or down.</p>'
                 f'<div class="grid">{"".join(xcard(x) for x in ee_extras)}</div>') + sections
     ws_links += [f"/free/{x['slug']}/" for x in ee_extras]
+if ny_extras:
+    sections += (f'<h2 id="new-year">New Year\'s</h2><p>Ring in the new year with big, easy-to-read puzzles for parties and January activity hours.</p>'
+                 f'<div class="grid">{"".join(xcard(x) for x in ny_extras)}</div>')
+    ws_links += [f"/free/{x['slug']}/" for x in ny_extras]
+if tg_extras:
+    sections += (f'<h2 id="thanksgiving">Thanksgiving & fall</h2><div class="grid">{"".join(xcard(x) for x in tg_extras)}</div>')
+    ws_links += [f"/free/{x['slug']}/" for x in tg_extras]
 body = f"""<h1>Free large-print word search printables for seniors and adults</h1>
 <p class="lead">7 themed books, 50 puzzles each, one puzzle per page with extra-large letters. Print free puzzles from every book: {WS_N} free PDFs, each with the answer key.</p>
-<p class="jump">{'<a href="#extra-easy">Extra Easy</a> · ' if ee_extras else ""}{" · ".join(f'<a href="#{k}">{E(books[k]["name"])}</a>' for k in ORDER)} · <a href="/#thanksgiving">Thanksgiving</a></p>
+<p class="jump">{'<a href="#extra-easy">Extra Easy</a> · ' if ee_extras else ""}{" · ".join(f'<a href="#{k}">{E(books[k]["name"])}</a>' for k in ORDER)}{' · <a href="#new-year">New Year\'s</a>' if ny_extras else ""} · <a href="#thanksgiving">Thanksgiving</a></p>
 {sections}{faq_html}{signup()}"""
 write(path + "index.html", page(path, "Free Large Print Word Search Printables for Seniors & Adults",
       f"Browse {WS_N} free large-print word searches: Christmas, winter, Bible, hymns, 1950s, garden and cooking. One puzzle per page, answer key included. Printable PDF.",
@@ -889,7 +912,11 @@ H_TILES = (f'<a class="tile" href="/word-search/"><img src="/img/cover-christmas
            f'<span><b>Word Search</b>7 themed books, 50 puzzles each<br>{WS_N} free printables<em>Browse word searches →</em></span></a>'
            f'<a class="tile" href="/sudoku/"><img src="/img/cover-sudoku-1.jpg" alt="Large print sudoku books" width="340" height="440">'
            f'<span><b>Sudoku</b>7 books, Easy to Hard, 100 puzzles each<br>{len(sd_extras)} free printables<em>Browse sudoku →</em></span></a>')
-H_SEASON = f'<h2 id="thanksgiving">This week: Thanksgiving</h2><div class="grid">{"".join(xcard(x) for x in seasonal)}</div>'
+_cw = [x for x in ws_extras if x["book"] in ("christmas", "winter")][::-1][:4]
+H_SEASON = (f'<h2 id="christmas-winter">Christmas & Winter</h2><p>Big, cozy holiday and snow-day puzzles to print for parties, '
+            f'December activity hours and long winter afternoons.</p><div class="grid">{card("christmas")}{card("winter")}{"".join(xcard(x) for x in _cw)}</div>'
+            f'<p><a class="btn alt" href="/word-search/#christmas">More Christmas</a><a class="btn alt" href="/word-search/#winter">More winter</a>'
+            + (f'<a class="btn alt" href="/word-search/#new-year">New Year\'s puzzles</a>' if ny_extras else "") + '</p>')
 H_WS = (f'<h2>Free word searches</h2><div class="grid">{"".join(card(o) for o in ORDER[:6])}</div>'
         f'<p><a class="btn alt" href="/word-search/">See all {WS_N} free word searches</a></p>')
 H_SD = (f'<h2>Free sudoku</h2><div class="grid">{"".join(xcard(x) for x in sd_extras[:3])}</div>'
